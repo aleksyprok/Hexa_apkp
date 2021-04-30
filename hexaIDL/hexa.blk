@@ -1,0 +1,11 @@
+common blk,version,home,dir,filename,nt,extension,vsetup,plot1d
+common dat,aax,aay,aaz,bx1,by1,bz1,cx1,cy1,cz1,alpha1,grad1,div4,  $
+                     vx1,vy1,vz1,ffx1,ffy1,ffz1
+common hex,num_hex_cells,nc,xc,yc,kc
+common mag,nx,ny,nz,delx,dely,delz,bxcon,  $
+                      xmin,xmax,x2min,x2max,ymin,ymax,zmin,zmax,  $
+                      rad,qq,bzd,diva0,daay0,aax0,aay0,bz
+common src,nrelax,nmajor,nminor,nrep,nsplit,nbpole,orient,imode,nsinit,  $
+                    dtminor,dtime,time,ns,ks,xs,ys,fs
+common fil,nfil,ncvt,ncvw,nins,nwdt,faxi,fpol
+

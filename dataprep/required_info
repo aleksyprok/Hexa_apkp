@@ -1,0 +1,9 @@
+;Required information for the data preparation codes
+
+dir='run1/' ; working directory (include the trailing '/')
+
+deltx=7.06e7*1.977 ;size of magnetogram pixel in cm
+
+dtime=96. ;cadence in minutes
+
+

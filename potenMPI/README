@@ -1,0 +1,18 @@
+MPI potential field generator - ONLY TO BE USED WITH CLOSED TOP AND SIDE BOUNDARY CONDITIONS!!!!!!!
+
+This code produces potential fields for each magnetogram observation used in the simulation. These potential fields allow the free magnetic energy to be calculated.
+
+The MPI version of the code works by dividing the N magnetograms between the M processors used, and getting each processor to loop over the N/M runs and calculate each potential field in turn. 
+
+
+Usage:
+From the data preparation directory, copy across the 'params.dat' file and create a directory whose name matches the run name used in the data preparation routine. In this directory place the mag_data.dat file produced by the data preparation routine.
+
+Compile the code using make. This code has been tested on gcc 4.8.3 using OpenMPI 1.6.4 and with ifort 12.1.0 using Intel MPI 4.0 update 3.
+
+
+
+NOTE: N (the number of framess) does not need to be divisible by M (the number of processes), so if (for example) N=11 and M=2, then processor 1 will calculate frames 1:5 and processor 2 will calculate frames 6:11. 
+
+VERY IMPORTANT:
+Each process requires ~0.125/~1/~8 GB of memory for grids with resolutions of 128^3/256^3/512^3, so be careful (especially for the 512^3 grids) not to run more processes per node than the node has memory for. 

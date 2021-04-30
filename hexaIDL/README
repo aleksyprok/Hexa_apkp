@@ -1,0 +1,81 @@
+This directory contains a set of IDL routines (contained within hexa.pro) to
+visualise the output of the simulations. Namely with hexa.pro fieldline plots
+can be generated with which one can visualise the 3D magnetic field.
+
+USAGE:
+
+- Type in '.r hexa' to compile hexa.pro
+
+- type 'hexa'. This produces a grapical interface to the program. 
+
+- Under the main menu, select 'Setup Directory and Grid' (or alternatively type
+  'prog_grid' into the IDL prompt). You will then be prompted to type in the
+  directory containing the output files from the simulation. This will set up
+  the program to use the appropriate hexa grid.
+  
+- Under the main menu select 'Restore 3D Model from File' (or alternatively type
+  'prog_restore' into the IDL prompt). You will then be prompted to type in the
+  filename of the file you want read in.
+  
+Then select either "Show 1D Display", "Show 2D Display" or "Show 3D Display" to display the data.
+
+
+
+
+Below all the menu options are listed and their functions are described:
+
+Set HEXA Home Directory (prog_home):
+Sets the IDL program's default path. The user is asked to enter the path they
+would like to use.
+
+Setup Directory and Grid (prog_grid):
+Sets the directory the simulation files are stored in and sets up the grid.
+The user is asked to enter the path where the simulation files are stored.
+
+
+Restore 3D Model from File (prog_restore):
+Reads in the output file specified by the user.
+
+Restore Current File (prog_restore_cur):
+Reads in the previously read in file.
+
+Recompute magnetic field (prog_field):
+Computes (B, J and v) from the vector potentials. This is automatically called
+by prog_restore and prog_restore_cur.
+
+Show 1D Display (prog_plot1d):
+Plots various quantities (e.g. B, J, v, alpha etc...) along a user defined
+1D cut.
+
+Show 2D Display (prog_plot2d):
+Plots a 2D cut through the 3D volume. The cut can be visualised as a contour
+plot (or greysclale) of the component normal to the cut, and vectors denote the
+component in the plane of the cut. If the user clicks on the plot area, a field line is drawn from the location they click. The user can also locate flux ropes
+by clicking 'Find Flux Ropes' (or typing in 'frfinder[,threshold=...]') which
+locates the positions of the flux rope axes in the volume where the field
+strength is greater than a certain threshold (default: 50G). Clicking 'VIEW' will
+then plot field lines from the flux rope axis locations.
+
+Show 3D Display (prog_plot3d):
+Allows the field lines drawn to be viewed in 3D, by the user selecting the view
+angle. The user can also produce an animation of the volume being rotated (via 
+the 'ROTATE' button) and view a time sequence of the evolving field (through the
+'TimeSeq' button).
+
+Show Surface Evolution (prog_evolve):
+Displays an animation of the photospheric boundary condition.
+
+Save Field Lines (prog_save_lines):
+Saves the starting points of the current set of field lines to file. The user is
+asked to enter the number to be used in the field line save file.
+
+HEXA Colour Table (hexa_colour):
+Sets up the Hexa colour tables and plot settings. This procedure is automatically
+called during startup, but may occasionally require to be called to reset the
+plot settings.
+
+About HEXA:
+Displays information about Hexa and its developers
+
+Quit:
+Exits hexa.

@@ -1,0 +1,49 @@
+This directory contains the set of data preparation routines for cleaning up a time series of magnetograms
+and producing the necessary files to allow a simulation to be run by Hexa, namely an initial condition
+coronal field, the evolving lower boundary condition, and the set of run parameters.
+
+In order to use the routines, an IDL save file (data.sav) containing the magnetogram time series in the form
+of an array DATA=FLTARR(NX,NY,NT) must be placed in a directory ($DIR).
+
+
+
+
+TO USE:
+
+Type 'make' to compile the fortran codes. 
+
+In the file 'required_info' set the variable 'dir' to the working directory ($DIR), 'deltx' to the size of a 
+magnetogram pixel in centimetres and 'dtime' to the magnetogram cadence (in minutes).
+
+Then in an IDL window, type '@Start' to initialise the routines. Then simply type 'data_prep' and follow the
+onscreen instructions.
+
+
+OUTPUT:
+
+
+Root directory:
+params.dat - parameter file used by the fortran codes
+
+
+$DIR:
+mag_data - fortran unformatted data file containing the cleaned magnetograms. To be used by the fortran codes
+
+$DIR/plots:
+raw_flux.eps - the time evolution of the flux in the observed magnetograms
+cleaned_flux.eps - the time evolution of the flux in the cleaned manetograms
+flux_imbalance.eps - the time evolution of the flux imbalance in the observed and cleaned magnetograms
+separation.eps - the time evolution of the bipole separation in the observed and cleaned magnetograms
+tilt_angle.eps - the time evolution of the bipole tilt angle in the observed and cleaned magnetograms
+hexa_flux.eps - the time evolution of the flux in the lower boundary condition used by Hexa
+hexa_sep.eps - the time evolution of the bipole separation in the lower boundary condition used by Hexa
+hexa_tilt.eps - the time evolution of the bipole separation in the lower boundary condition used by Hexa
+
+$DIR/frames:
+frame***.png - images comparing the observed and cleaned magnetograms for every magnetogram frame
+
+$DIR/hexa_files:
+param1 - parameter file
+$DIR_setup - setup file, containing various options
+$DIR_evolve - file containing lower boundary condition
+$DIR_00000p - linear force-free initial condition

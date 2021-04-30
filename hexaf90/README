@@ -1,0 +1,23 @@
+This directory contains the fortran code (hexa.f90) that drives the evolution 
+of the coronal field via the magnetofrictional method.
+
+The data preparation routines (data_prep.pro) produces the files:
+ - param1
+ - [root]_setup
+ - [root]_00000p
+ - [root]_evolve
+in the folder [root]/hexa_files, where [root] is the name of the
+run specified when running the data preparation codes. Place these files in a 
+directory, [dir], in this directory. Then in 'hexa_main.f90' edit lines 15 and 16
+to set dir='[dir]' and root='[root]'.
+
+Compile Hexa using make. Hexa has been tested on gcc 4.8.3 using OpenMPI 1.6.4
+and with ifort 12.1.0 using Intel MPI 4.0 update 3.
+
+Hexa operates with a grid of 2^n x 2^n x 2^n cells, so hexa must be run on 2^n
+processors.
+
+If Hexa has been stopped before it has carried out the whole simulation then it 
+can be restarted from an arbitrary snapshot by changing the 'nstrt' parameter in
+[root]_setup from 0 to the snapshot number it is to be restarted from.
+

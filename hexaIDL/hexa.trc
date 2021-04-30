@@ -1,0 +1,4 @@
+common trc,np,xp,yp,zp,np0,xp0,yp0,zp0,  $
+           kp,xtrc,ytrc,ztrc,strc,atrc,ds2,bx2,by2,bz2,bm2, $
+           x2a,x2b,y2a,y2b,z2a,z2b,ccc
+

@@ -1,0 +1,28 @@
+This directory contains various analysis codes:
+
+- analysis.f90 (and associated fortran files, readin.f90, calculate.f90 and module.f90)
+
+- analysis.pro
+
+- quick_analysis.pro
+
+
+Firstly, the fortran code must be run to reduce the data. This code takes the files produced by hexa and their corresponding potential fields and calculates the free magnetic energy and relative magnetic helicity. It also saves the free magnetic energy density and the square of the current to file.
+
+Once the fortran code has finished, 'quick_analysis.pro' can be run to quickly view the free magnetic energy and helicity as a function of time.
+
+Running 'analysis.pro' will allow the user to produce plots of the column-integrated current density squared and free magnetic energy density.
+
+
+Usage:
+
+analysis.f90:
+Change lines 8-11 to specify the directories containing the hexa and potential fields, and the roots of the hexa and potential filenames.
+
+Compile using make.
+
+quick_analysis.pro:
+Change line 3 to set the directory containing the hexa files, then run quick_analysis.pro
+
+analysis.pro:
+Change line 3 to set the directory containing the hexa files, and line 4 to set the time cadence of the magnetograms. Then run analysis.pro

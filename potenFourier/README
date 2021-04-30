@@ -1,0 +1,11 @@
+IDL potential field generator - ONLY TO BE USED IF EITHER OPEN TOP AND/OR PERIODIC SIDE BOUNDARY CONDITIONS ARE USED.
+
+This code produces potential fields for each magnetogram observation used in the simulation. These potential fields allow the free magnetic energy to be calculated.
+
+
+Usage:
+From the data preparation directory, copy across the 'params.dat' file and create a directory whose name matches the run name used in the data preparation routine. In this directory place the mag_data.dat file produced by the data preparation routine.
+
+Run the code in IDL to generate the potential fields.
+
+
