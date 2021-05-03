@@ -4,7 +4,7 @@ MODULE var_global
 
   INCLUDE "mpif.h"
 
-  INTEGER, PARAMETER :: num = KIND(0.0D0)
+  INTEGER, PARAMETER :: num = KIND(0.0E0)
   ! INTEGER, PARAMETER :: num = 16
   REAL(num), PARAMETER :: pi = 4.0_num * ATAN(1.0_num)
   REAL(num), PARAMETER :: frc_coef = 3000.0_num ! Frictional coefficient (km^2/s)
@@ -19,10 +19,10 @@ MODULE var_global
   INTEGER :: periodic, open
 
   ! File and directory names
-  CHARACTER (LEN = *), PARAMETER :: potential_field_file = 'setup_files/poten_00060p'
-  CHARACTER (LEN = *), PARAMETER :: evolution_field_file = 'setup_files/run1_00060p'
-  CHARACTER (LEN = *), PARAMETER :: parameters_file      = 'setup_files/param1'       ! Used to get nx, ny, nz
-  CHARACTER (LEN = *), PARAMETER :: setup_file           = 'setup_files/run1_setup'   ! Used to check for periodic/open boundaries
+  CHARACTER (LEN = *), PARAMETER :: potential_field_file = 'setup_files/smothed_128x128/run1_00020p'
+  CHARACTER (LEN = *), PARAMETER :: evolution_field_file = 'setup_files/smothed_128x128/run1_00020p'
+  CHARACTER (LEN = *), PARAMETER :: parameters_file      = 'setup_files/smothed_128x128/param1'       ! Used to get nx, ny, nz
+  CHARACTER (LEN = *), PARAMETER :: setup_file           = 'setup_files/smothed_128x128/run1_setup'   ! Used to check for periodic/open boundaries
   CHARACTER (LEN = *), PARAMETER :: output_file          = 'run1/relax_'
   CHARACTER (LEN = 50) :: filename
 

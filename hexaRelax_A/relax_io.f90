@@ -99,7 +99,7 @@ CONTAINS
     INTEGER, INTENT(IN) :: n
     REAL(num), DIMENSION(:,:,:), ALLOCATABLE :: aax_global, aay_global, aaz_global
     INTEGER, DIMENSION(mpidir) :: dumcord
-    INTEGER :: i, j
+    INTEGER :: i, j, k, opt = 1
 
     IF (rank .EQ. rankstart) THEN
 
@@ -149,15 +149,19 @@ CONTAINS
 
     IF (rank .EQ. rankstart) THEN
 
-      WRITE (filename, FMT = '(a, i5.5)')  output_file, n
+      WRITE (filename, FMT = '(a, i5.5, "p")')  output_file, n
 
       OPEN(UNIT = 42, &
            FILE = FILENAME, &
            FORM = 'UNFORMATTED', &
            STATUS = 'UNKNOWN')
-      WRITE (42) aax_global
-      WRITE (42) aay_global
-      WRITE (42) aaz_global
+      WRITE (42) opt
+      ! WRITE (42) aax_global
+      ! WRITE (42) aay_global
+      ! WRITE (42) aaz_global
+      write (42) (((aax_global(i,j,k),i=1,nxglobal  ),j=1,nyglobal+1),k=1,nzglobal+1)
+      write (42) (((aay_global(i,j,k),i=1,nxglobal+1),j=1,nyglobal  ),k=1,nzglobal+1)
+      write (42) (((aaz_global(i,j,k),i=1,nxglobal+1),j=1,nyglobal+1),k=1,nzglobal  )
       CLOSE (42)
 
       DEALLOCATE(aax_global, aay_global, aaz_global)

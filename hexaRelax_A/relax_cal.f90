@@ -12,14 +12,14 @@ CONTAINS
 
     REAL(num) :: frc, bbmax, t, local_max
     REAL(num) :: localmin, globalmin
-    REAL(num), DIMENSION(nx, ny, nz) :: b_c, bm_c ! bb and bbm at cell centre
+    REAL(num), DIMENSION(nx, ny, 2:nz) :: b_c, bm_c ! bb and bbm at cell centre
     REAL(num) :: b2local, b2global
     REAL(num), PARAMETER :: c = 3.e10_num ! cm/s
     REAL(num), DIMENSION(nx, ny) :: exbase, eybase, bxbase, bybase, poynting
     REAL(num) :: szlocal, szglobal
     REAL(num) :: qlocal, qglobal
     REAL(num), DIMENSION(nx+1, ny+1, nz+1) :: vv ! Velocity squared
-    REAL(num), DIMENSION(nx, ny, nz) :: diss
+    REAL(num), DIMENSION(nx, ny, 2:nz) :: diss
     REAL(num) :: min_diva_local, min_diva_global, max_diva_local, max_diva_global
     REAL(num) :: mean_diva_local, mean_diva_global
     REAL(num) :: t_snapshot, dt_snapshots
@@ -138,8 +138,8 @@ CONTAINS
       bybase = 0.25_num * (bby(1:nx, 1:ny, 1) + bby(1:nx, 2:ny+1, 1) + &
                            bby(1:nx, 1:ny, 2) + bby(1:nx, 2:ny+1, 2))
 
-      exbase = 0.5_num * (eex(1:nx, :, 2) + eex(2:nx+1, :, 2))
-      eybase = 0.5_num * (eey(:, 1:ny, 2) + eey(:, 2:ny+1, 2))
+      exbase = 0.5_num * (eex(:, 1:ny, 2) + eex(:, 2:ny+1, 2))
+      eybase = 0.5_num * (eey(1:nx, :, 2) + eey(2:nx+1, :, 2))
 
       poynting = (exbase * bybase - eybase * bxbase) * delx * dely
       szlocal = SUM(poynting)
@@ -183,8 +183,6 @@ CONTAINS
         snapshot_num = snapshot_num + 1
         CALL writedata(snapshot_num)
       END IF
-      ! snapshot_num = snapshot_num + 1
-      ! CALL writedata(snapshot_num)
 
       !####################################################
       !                 Determine timestep
@@ -192,9 +190,9 @@ CONTAINS
 
       ! Determine minimum cell crossing time for advection terms
 
-      localmin = MINVAL( (/ delx / MAXVAL(ABS(vx)), &
-                            dely / MAXVAL(ABS(vy)), &
-                            delz / MAXVAL(ABS(vz)), &
+      localmin = MINVAL( (/ delx / MAXVAL( (/ ABS(vx), TINY(0.0_num) /) ), &
+                            dely / MAXVAL( (/ ABS(vy), TINY(0.0_num) /) ), &
+                            delz / MAXVAL( (/ ABS(vz), TINY(0.0_num) /) ), &
                             delx * delx / etad /) )
       CALL MPI_ALLREDUCE(localmin, globalmin, 1, mpi_num, MPI_MIN, MPI_COMM_WORLD, ierr)
 
@@ -280,7 +278,6 @@ CONTAINS
     REAL(num), INTENT(IN) :: t
     REAL(num), DIMENSION(1:nx+1, 0:ny+1) :: bbx_p
     REAL(num), DIMENSION(0:nx+1, 1:ny+1) :: bby_p
-    INTEGER :: ix, iy
 
     ! Bounary conditions
 
@@ -314,44 +311,6 @@ CONTAINS
     bbx(:, :, nz+1) = bbx(:, :, nz)
     bby(:, :, nz+1) = bby(:, :, nz)
 
-    ! IF (left .EQ. MPI_PROC_NULL) THEN
-    !   bby(0, :, :) = bby(1, :, :)
-    !   bbz(0, :, :) = bbz(1, :, :)
-    ! END IF
-    !
-    ! IF (right .EQ. MPI_PROC_NULL) THEN
-    !   bby(nx+1, :, :) = bby(nx, :, :)
-    !   bbz(nx+1, :, :) = bbz(nx, :, :)
-    ! END IF
-    !
-    ! IF (down .EQ. MPI_PROC_NULL) THEN
-    !   bbx(:, 0, :) = bbx(:, 1, :)
-    !   bbz(:, 0, :) = bbz(:, 1, :)
-    ! END IF
-    !
-    ! IF (up .EQ. MPI_PROC_NULL) THEN
-    !   bbx(:, ny+1, :) = bbx(:, ny, :)
-    !   bbz(:, ny+1, :) = bbz(:, ny, :)
-    ! END IF
-    !
-    ! bbx(:, :, nz+1) = bbx(:, :, nz)
-    ! bby(:, :, nz+1) = bby(:, :, nz)
-    !
-    ! IF (t .LE. 10.0_num) THEN
-    !   bbx(:, :, 0) = 0.0_num
-    !   DO iy = 1, ny + 1
-    !     DO ix = 0, nx + 1
-    !       bby(ix, iy, 0) = driver(xc(ix), yb(iy), t)
-    !     END DO
-    !   END DO
-    ! END IF
-    !
-    ! bbx(:, :, nz+1) = bbx(:, :, nz) + delz &
-    !                 * (bbz(1:nx+1, :, nz+1) - bbz(0:nx, :, nz+1)) / delx
-    !
-    ! bby(:, :, nz+1) = bby(:, :, nz) + delz &
-    !                 * (bbz(:, 1:ny+1, nz+1) - bbz(:, 0:ny, nz+1)) / dely
-
   END SUBROUTINE boundary_conditions
 
   FUNCTION ramp_up(t)
@@ -366,37 +325,6 @@ CONTAINS
     END IF
 
   END FUNCTION ramp_up
-
-  FUNCTION ramp_down(t)
-
-    REAL(num), INTENT(IN) :: t
-    REAL(num) :: ramp_down
-
-    IF (t .LE. 10.0_num) THEN
-      ramp_down = 1.0_num
-    ELSE IF ((t .GT. 10.0_num) .AND. (t .LE. 11.0_num)) THEN
-      ramp_down = 1.0_num - SIN(0.5_num * pi * t) ** 2
-    ELSE
-      ramp_down = 0.0_num
-    END IF
-
-  END FUNCTION ramp_down
-
-  FUNCTION driver(x, y, t)
-
-    REAL(num), INTENT(in) :: x, y, t
-    REAL(num) :: driver
-    REAL(num) :: r
-
-    r = SQRT((x - 3.0_num) ** 2.0_num + (y - 3.0_num) ** 2.0_num)
-    IF (r .LE. 3.0_num) THEN
-      driver = COS(pi * r / 6.0_num) ** 2.0_num * SIN(0.1_num * pi * t)
-    ELSE
-      driver = 0.0_num
-    END IF
-    ! driver = SIN(pi * t) * ramp_up(t)
-
-  END FUNCTION driver
 
   SUBROUTINE calc_boundary_field
 
