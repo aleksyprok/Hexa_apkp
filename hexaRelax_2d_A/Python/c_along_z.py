@@ -14,7 +14,7 @@ start_time = time.time()
 file_number = len(glob.glob('run1/relax_*'))
 print(file_number)
 
-output_dir = 'Figures/Video/along_z'
+output_dir = 'Figures/Video/c_along_z'
 
 nx = 256
 nz = 256
@@ -34,7 +34,7 @@ fig_size[1] = fig_size[1] * 3
 fig.set_size_inches(fig_size)
 
 ix_list = [0, 1, nx//4, nx//2, -nx//4, -2,-1]
-var_list = ["bbx", "bby", "bbz", "divb"]
+var_list = ["ccx", "ccy", "ccz"]
 for var in var_list:
     os.makedirs(output_dir + '/' + var, exist_ok = True)
 
@@ -49,13 +49,14 @@ for n in range(0, file_number, 10):
 
     print(n, t)
 
-    divb = (bbx[1:-1, 1:] - bbx[1:-1, :-1]) / dx \
-         + (bbz[1:, 1:-1] - bbz[:-1, 1:-1]) / dz
+    ccx =-(bby[1:, :] - bby[:-1, :]) / dz
+    ccy = (bbx[1:, :] - bbx[:-1, :]) / dz \
+        - (bbz[:, 1:] - bbz[:, :-1]) / dx
+    ccz = (bby[:, 1:] - bby[:, :-1]) / dx
 
-    bb = {"bbx" : bbx, \
-          "bby" : bby, \
-          "bbz" : bbz, \
-          "divb" : divb}
+    cc = {"ccx" : ccx, \
+          "ccy" : ccy, \
+          "ccz" : ccz}
 
     for var in var_list:
         k = 0
@@ -65,7 +66,7 @@ for n in range(0, file_number, 10):
             if i == 3: k += 1
             if i == 4: k += 1
             ax = fig.add_subplot(3, 3, k)
-            ax.plot(bb[var][:, ix])
+            ax.plot(cc[var][:, ix])
             ax.set_title(var + ', ix = ' + str(ix))
             if i == 1:
                 ax.text(0.35, 1.1, \

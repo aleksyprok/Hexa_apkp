@@ -14,7 +14,7 @@ start_time = time.time()
 file_number = len(glob.glob('run1/relax_*'))
 print(file_number)
 
-output_dir = 'Figures/Video/along_z'
+output_dir = 'Figures/Video/along_x'
 
 nx = 256
 nz = 256
@@ -33,8 +33,8 @@ fig_size[0] = fig_size[0] * 3
 fig_size[1] = fig_size[1] * 3
 fig.set_size_inches(fig_size)
 
-ix_list = [0, 1, nx//4, nx//2, -nx//4, -2,-1]
-var_list = ["bbx", "bby", "bbz", "divb"]
+iz_list = [0, 1, nz//4, nz//2, -nz//4, -2,-1]
+var_list = ["bbx", "bby", "bbz"]
 for var in var_list:
     os.makedirs(output_dir + '/' + var, exist_ok = True)
 
@@ -49,24 +49,20 @@ for n in range(0, file_number, 10):
 
     print(n, t)
 
-    divb = (bbx[1:-1, 1:] - bbx[1:-1, :-1]) / dx \
-         + (bbz[1:, 1:-1] - bbz[:-1, 1:-1]) / dz
-
     bb = {"bbx" : bbx, \
           "bby" : bby, \
-          "bbz" : bbz, \
-          "divb" : divb}
+          "bbz" : bbz}
 
     for var in var_list:
         k = 0
         for i in range(7):
-            ix = ix_list[i]
+            iz = iz_list[i]
             k += 1
             if i == 3: k += 1
             if i == 4: k += 1
             ax = fig.add_subplot(3, 3, k)
-            ax.plot(bb[var][:, ix])
-            ax.set_title(var + ', ix = ' + str(ix))
+            ax.plot(bb[var][iz, :])
+            ax.set_title(var + ', iz = ' + str(iz))
             if i == 1:
                 ax.text(0.35, 1.1, \
                     	"t = " + "{:10.2e}".format(t), \

@@ -43,7 +43,7 @@ CONTAINS
     REAL(num), INTENT(IN) :: x, z, l
     REAL(num) :: bx_nlff
 
-    bx_nlff = (l / kx) * SIN(kx * x) * COSH(l * (z + Lz))
+    bx_nlff = (l / kx) * SIN(kx * x) * COSH(l * (z - Lz)) / SINH(-l * Lz)
 
   END FUNCTION bx_nlff
 
@@ -52,7 +52,7 @@ CONTAINS
     REAL(num), INTENT(IN) :: x, z, l
     REAL(num) :: by_nlff
 
-    by_nlff = -SQRT(1 - l * l / (kx * kx)) * SIN(kx * x) * SINH(l * (z + Lz))
+    by_nlff = -SQRT(1 - l * l / (kx * kx)) * SIN(kx * x) * SINH(l * (z - Lz)) / SINH(-l * Lz)
 
   END FUNCTION by_nlff
 
@@ -61,7 +61,7 @@ CONTAINS
     REAL(num), INTENT(IN) :: x, z, l
     REAL(num) :: bz_nlff
 
-    bz_nlff = -COS(kx * x) * SINH(l * (z + Lz))
+    bz_nlff = -COS(kx * x) * SINH(l * (z - Lz)) / SINH(-l * Lz)
 
   END FUNCTION bz_nlff
 
@@ -70,7 +70,7 @@ CONTAINS
     REAL(num), INTENT(IN) :: x, z
     REAL(num) :: ay_poten
 
-    ay_poten = -SIN(kx * x) * SINH(kx * (z + Lz)) / kx
+    ay_poten = -SIN(kx * x) * SINH(kx * (z - Lz)) / kx / SINH(-kx * Lz)
 
   END FUNCTION ay_poten
 
