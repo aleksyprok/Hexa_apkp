@@ -71,7 +71,7 @@ if strmid(uvalue(0),0,4) eq 'MENU' then uvalue=uvalue(ev.value)
 ;  any procedure:
 ;
 if uvalue eq 'HEXA_ABOUT' then begin
-  title='Evolution on hexagonal grid (HEXA)' 
+  title='Evolution on hexagonal grid (HEXA)'
   text=strarr(17)
   text( 0)='Evolution on hexagonal grid (HEXA)'
   text( 1)='Version 1.1 -- January 2008'
@@ -90,10 +90,10 @@ if uvalue eq 'HEXA_ABOUT' then begin
   text(14)='  St Andrews'
   text(15)='  KY16 9SS'
   text(16)='  Email: gpsg@st-andrews.ac.uk'
-  
-  
-  
-  POP_UP, title, text 
+
+
+
+  POP_UP, title, text
   return
 endif
 if uvalue eq 'QUIT' then begin
@@ -824,7 +824,7 @@ end
 ; print,'Output saved on '+file
 ; ;
 ; end
-; 
+;
 ; ;-----------------------------------------------------------------
 ; ;  Setup 3D model and evolution for single bipole:
 ; ;-----------------------------------------------------------------
@@ -886,7 +886,7 @@ end
 ;    ys=ys0+hwidth*[sth,-sth]
 ;    dxs=[-cth,cth]/nminor
 ;    dys=[-sth,sth]/nminor
-;    end   
+;    end
 ; else: begin
 ;       print,'Error: unknown imode'
 ;       return
@@ -1038,12 +1038,12 @@ end
 ; answer=''
 ; read,prompt='Continue?  (def=y,q=quit)  ',answer
 ; if answer eq 'q' then return
-; 
+;
 ; ;
 ; ; restore data and place in larger grid
 ; ;
 ; restore,'mag_data.sav'
-; 
+;
 ; ;
 ; ;  Initialize calculation of magnetic field and vector potential.
 ; ;  Assumes periodic boundary conditions in Y, closed in X:
@@ -1063,12 +1063,12 @@ end
 ; aax=fltarr(nx  ,ny+1,nz+1)
 ; aay=fltarr(nx+1,ny  ,nz+1)
 ; aaz=fltarr(nx+1,ny+1,nz  )
-; 
-; 
+;
+;
 ; bz0=fltarr(nx,ny)
 ; size_mag = size(cor_mag) & shiftx = (nx-size_mag(1))/2 & shifty = (ny-size_mag(2))/2
 ; bz0(shiftx:shiftx+size_mag(1)-1,shifty:shifty+size_mag(2)-1) = cor_mag(*,*,0)
-; 
+;
 ; ny2=2*ny
 ; bzd(0:nx-1, 0:ny -1)=bz0
 ; bzd(0:nx-1,ny:ny2-1)=reverse(bz0,2)
@@ -1090,7 +1090,7 @@ end
 ;   aay(     0,0:ny-1,k)=-(h(     0,0:ny-1)-h(  nx-1,0:ny-1))/delx
 ;   aay(    nx,0:ny-1,k)=aay(0,0:ny-1,k)
 ; endfor
-; 
+;
 ; diva0=fltarr(ny+1)
 ; daay0=fltarr(ny)
 ; ;
@@ -1123,7 +1123,7 @@ end
 ; ;
 ;   for nr=1,nminor do begin
 ;     time=time+dtminor
-; 
+;
 ;     if n_elements(nwin) eq 0 then nwin=4
 ;     device,window_state=flag
 ;     if flag(nwin) then wset,nwin else window,nwin,xs=500,ys=500
@@ -1132,8 +1132,8 @@ end
 ; ;
 ;     bz0=fltarr(nx,ny)
 ;     bz0(shiftx:shiftx+size_mag(1)-1,shifty:shifty+size_mag(2)-1) = cor_mag(*,*,(nm-1)*10+nr-1)
-; 
-; 
+;
+;
 ;     ny2=2*ny
 ;     bzd(0:nx-1, 0:ny -1)=bz0
 ;     bzd(0:nx-1,ny:ny2-1)=reverse(bz0,2)
@@ -1144,7 +1144,7 @@ end
 ;     aay0(1:nx-1,0:ny-1)=-(h(1:nx-1,0:ny-1)-h(0:nx-2,0:ny-1))/delx
 ;     aay0(     0,0:ny-1)=-(h(     0,0:ny-1)-h(  nx-1,0:ny-1))/delx
 ;     aay0(    nx,0:ny-1)=aay0(0,0:ny-1)
-; 
+;
 ; ;
 ; ;  Write (AAX0,AAY0) on "evolution" file:
 ; ;
@@ -1182,23 +1182,23 @@ end
 ;      diva0(1:ny-1)=(daay0(1:ny-1)-daay0(0:ny-2))/dely
 ;      daay0=daay0+eta*(diva0(1:ny)-diva0(0:ny-1))/dely
 ;    endfor
-; 
+;
 ;   endfor
 ; time=float(nm)
 ; endfor
-; 
+;
 ; close,1
 ; print,'Output saved on '+file
 ; ;
 ; stop
 ; end
-; 
+;
 ; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; ;
 ; ; Setup bipole cancelling underneath a filament.
 ; ;
 ; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; 
+;
 ; pro prog_setup_filcancel
 ; @hexa.blk
 ; @hexa.col
@@ -1234,48 +1234,48 @@ end
 ; answer=''
 ; read,prompt='Continue?  (def=y,q=quit)  ',answer
 ; if answer eq 'q' then return
-; 
+;
 ; ;
 ; ; setup initial data sequence.
 ; ;
-; 
+;
 ; x1 = -0.84375d0 & y1 = -0.34375d0 & r1 = 0.1d0 & b1 = 10.d0
 ; x12 = 0.84375d0 & y12 = -0.34375d0
-; 
+;
 ; x1 = x1*3 + 3.0 & y1 = y1*3 + 3.0 & r1 = r1*3.0
-; x12 = x12*3 + 3.0 & y12 = y12*3 + 3.0 
-; 
+; x12 = x12*3 + 3.0 & y12 = y12*3 + 3.0
+;
 ; x6 = -0.84375d0 & y6 = 0.34375d0 & r6 = 0.1d0 & b6 = -10.0d0
 ; x13 = 0.84375d0 & y13 = 0.34375d0
-; 
+;
 ; x6 = x6*3 + 3.0 & y6 = y6*3 + 3.0 & r6 = r6*3.0
-; x13 = x13*3 + 3.0 & y13 = y13*3 + 3.0 
-; 
+; x13 = x13*3 + 3.0 & y13 = y13*3 + 3.0
+;
 ; x2 =  -0.6875d0 & y2 =  -0.34375d0 & r2 =  0.1d0 & b2 =  9.53*b1
 ; x3 =  0.6875d0  & y3 =  0.343755d0 & r3 =  0.1d0 & b3 =  9.53*b6
-; 
+;
 ; x2 =  x2*3.0 + 3.0 & y2 =  y2*3.0 + 3.0 & r2 =  r2*3.0
-; x3 =  x3*3.0 + 3.0 & y3 =  y3*3.0 + 3.0 & r3 =  r3*3.0 
-; 
+; x3 =  x3*3.0 + 3.0 & y3 =  y3*3.0 + 3.0 & r3 =  r3*3.0
+;
 ; bz_back=fltarr(nx,ny)
-; 
+;
 ; for i=0,nx-1 do begin
 ;   for j=0,ny-1 do begin
-; 
+;
 ;        xd = delx*i + delx/2.0
 ;        yd = dely*j + dely/2.0
-; 
+;
 ;        rc1 = ((xd-x1)^2+(yd-y1)^2)^0.5
 ;        rc12 = ((xd-x12)^2+(yd-y12)^2)^0.5
 ;        rcd1 = ((yd-y12)^2)^0.5
-;        
+;
 ;        rc6 = ((xd-x6)^2+(yd-y6)^2)^0.5
 ;        rc13 = ((xd-x13)^2+(yd-y13)^2)^0.5
 ;        rcd6 = ((yd-y13)^2)^0.5
-; 
+;
 ;        rc2 = ((xd-x2)^2+(yd-y2)^2)^0.5
 ;        rc3 = ((xd-x3)^2+(yd-y3)^2)^0.5
-; 
+;
 ;        if (xd lt x1) then begin
 ;          if rc1 le r1 then begin
 ;             bz_back(i,j) = bz_back(i,j) +  b1*(0.5d0*(1.d0+cos(!pi*rc1/r1)))
@@ -1284,7 +1284,7 @@ end
 ;             bz_back(i,j) = bz_back(i,j) +  b6*(0.5d0*(1.d0+cos(!pi*rc6/r6)))
 ;          endif
 ;        endif
-; 
+;
 ;        if ((xd ge x1) and (xd le x12)) then begin
 ;           if rcd1 le r1 then begin
 ;             bz_back(i,j) = bz_back(i,j) +  b1*(0.5d0*(1.d0+cos(!pi*rcd1/r1)))
@@ -1293,7 +1293,7 @@ end
 ;             bz_back(i,j) = bz_back(i,j) +  b6*(0.5d0*(1.d0+cos(!pi*rcd6/r6)))
 ;          endif
 ;        endif
-; 
+;
 ;        if (xd gt x12) then begin
 ;          if rc12 le r1 then begin
 ;             bz_back(i,j) = bz_back(i,j) +  b1*(0.5d0*(1.d0+cos(!pi*rc12/r1)))
@@ -1301,20 +1301,20 @@ end
 ;          if rc13 le r6 then begin
 ;             bz_back(i,j) = bz_back(i,j) +  b6*(0.5d0*(1.d0+cos(!pi*rc13/r6)))
 ;          endif
-;        endif             
-;  
+;        endif
+;
 ;        if rc2 le r2 then  begin
 ;             bz_back(i,j) = bz_back(i,j) +  b2*(0.5d0*(1.d0+cos(!pi*rc2/r1)))
 ;        endif
 ;        if rc3 le r3 then begin
 ;             bz_back(i,j) = bz_back(i,j) +  b3*(0.5d0*(1.d0+cos(!pi*rc3/r6)))
-;        endif     
-;           
+;        endif
+;
 ;   endfor
 ; endfor
 ; total_arc = total(abs(bz_back))
 ; print,'Total Bz of arcade',total_arc
-; 
+;
 ; ;
 ; ;  Initialize calculation of magnetic field and vector potential.
 ; ;  Assumes periodic boundary conditions in Y, closed in X:
@@ -1334,37 +1334,37 @@ end
 ; aax=fltarr(nx  ,ny+1,nz+1)
 ; aay=fltarr(nx+1,ny  ,nz+1)
 ; aaz=fltarr(nx+1,ny+1,nz  )
-; 
+;
 ; bz0 = fltarr(nx,ny)
 ; xp1 = 61*delx+delx/2.0 & yp1 = 52*dely+dely/2.0
 ; xn1 = 61*delx+delx/2.0 & yn1 = 52*dely+dely/2.0
-; 
+;
 ; xp2 = 61*delx+delx/2.0 & yp2 = 76*dely+dely/2.0
 ; xn2 = 61*delx+delx/2.0 & yn2 = 76*dely+dely/2.0
-; 
+;
 ; rad = 0.15
 ; bm =  -47.0
-; 
+;
 ; for i=0,nx-1 do begin
 ;   for j=0,ny-1 do begin
-; 
+;
 ;      xd = delx*i + delx/2.0
 ;      yd = dely*j + dely/2.0
-; 
+;
 ;      rp1 = sqrt( (xd-xp1)^2 + (yd-yp1)^2)^0.5
-;      rn1 = sqrt( (xd-xn1)^2 + (yd-yn1)^2)^0.5 
+;      rn1 = sqrt( (xd-xn1)^2 + (yd-yn1)^2)^0.5
 ;      rp2 = sqrt( (xd-xp2)^2 + (yd-yp2)^2)^0.5
-;      rn2 = sqrt( (xd-xn2)^2 + (yd-yn2)^2)^0.5 
-; 
-;      bz0(i,j) = bz_back(i,j) 
+;      rn2 = sqrt( (xd-xn2)^2 + (yd-yn2)^2)^0.5
+;
+;      bz0(i,j) = bz_back(i,j)
 ; ;
 ; ; + bm*exp(-rp^2/rad^2) - bm*exp(-rn^2/rad^2)
 ; ;
-; 
+;
 ;   endfor
 ; endfor
 ; print,'flux ratios'
-; print,total(abs(bz0)),(total(abs(bz0))-total_arc)/total_arc   
+; print,total(abs(bz0)),(total(abs(bz0))-total_arc)/total_arc
 ; ny2=2*ny
 ; bzd(0:nx-1, 0:ny -1)=bz0
 ; bzd(0:nx-1,ny:ny2-1)=reverse(bz0,2)
@@ -1386,7 +1386,7 @@ end
 ;   aay(     0,0:ny-1,k)=-(h(     0,0:ny-1)-h(  nx-1,0:ny-1))/delx
 ;   aay(    nx,0:ny-1,k)=aay(0,0:ny-1,k)
 ; endfor
-; 
+;
 ; diva0=fltarr(ny+1)
 ; daay0=fltarr(ny)
 ; ;
@@ -1398,7 +1398,7 @@ end
 ; answer=''
 ; read,prompt='Continue?  (def=y,q=quit)  ',answer
 ; if answer eq 'q' or answer eq 'n' then return
-; 
+;
 ; aax0=fltarr(nx  ,ny+1)
 ; aay0=fltarr(nx+1,ny  )
 ; file=dir+filename+'_evolve'
@@ -1412,36 +1412,36 @@ end
 ; ;
 ; d_count=1
 ; dys = (yn2-yp1)/(nmajor*nminor)/2.0
-; 
+;
 ; for nm=1,nmajor do begin
 ; ;
 ; ;  Move points:
 ; ;
 ;   for nr=1,nminor do begin
 ;     time=time+dtminor
-; 
-;       
+;
+;
 ;       yn1 = yn1+dys
 ;       yp2 = yp2-dys
-; 
+;
 ;       for i=0,nx-1 do begin
 ;         for j=0,ny-1 do begin
-; 
+;
 ;           xd = delx*i + delx/2.0
 ;           yd = dely*j + dely/2.0
-;  
+;
 ;           rp1 = sqrt( (xd-xp1)^2 + (yd-yp1)^2)^0.5
-;           rn1 = sqrt( (xd-xn1)^2 + (yd-yn1)^2)^0.5 
+;           rn1 = sqrt( (xd-xn1)^2 + (yd-yn1)^2)^0.5
 ;           rp2 = sqrt( (xd-xp2)^2 + (yd-yp2)^2)^0.5
-;           rn2 = sqrt( (xd-xn2)^2 + (yd-yn2)^2)^0.5 
-; 
-;  
+;           rn2 = sqrt( (xd-xn2)^2 + (yd-yn2)^2)^0.5
+;
+;
 ;           bz0(i,j) = bz_back(i,j) + bm*exp(-rp1^2/rad^2) - bm*exp(-rn2^2/rad^2) +$
 ;                                     bm*exp(-rp2^2/rad^2) - bm*exp(-rn1^2/rad^2)
-; 
+;
 ;         endfor
-;       endfor  
-; 
+;       endfor
+;
 ;       ny2=2*ny
 ;       bzd(0:nx-1, 0:ny -1)=bz0
 ;       bzd(0:nx-1,ny:ny2-1)=reverse(bz0,2)
@@ -1452,7 +1452,7 @@ end
 ;       aay0(1:nx-1,0:ny-1)=-(h(1:nx-1,0:ny-1)-h(0:nx-2,0:ny-1))/delx
 ;       aay0(     0,0:ny-1)=-(h(     0,0:ny-1)-h(  nx-1,0:ny-1))/delx
 ;       aay0(    nx,0:ny-1)=aay0(0,0:ny-1)
-; 
+;
 ; ;
 ; ;  Write (AAX0,AAY0) on "evolution" file:
 ; ;
@@ -1483,7 +1483,7 @@ end
 ;             yrange=[0.,ymax],ystyle=1,ytitle='Y'
 ;       endelse
 ;       wait,0.1
-; ;  
+; ;
 ; ;  Diffuse contribution from the flux rope (DAAY0) for next minor time step:
 ; ;
 ;      eta=0.05*delx^2
@@ -1491,14 +1491,14 @@ end
 ;        diva0(1:ny-1)=(daay0(1:ny-1)-daay0(0:ny-2))/dely
 ;        daay0=daay0+eta*(diva0(1:ny)-diva0(0:ny-1))/dely
 ;      endfor
-; 
+;
 ;   endfor
 ;   time=float(nm)
 ; endfor
 ; close,1
 ; print,'Output saved on '+file
 ; ;
-; 
+;
 ; end
 
 ;-----------------------------------------------------------------
@@ -1515,8 +1515,8 @@ error=get_param(1,'vsetup',vsetup,/integer)
 if error then return
 print,string(vsetup,   $
       format='("Version of setup file:      vsetup=",i2)')
-      
-      
+
+
 if vsetup eq 2 then begin
       ;
       error=get_param(1,'nrelax',nrelax,/integer)
@@ -1578,8 +1578,8 @@ if vsetup eq 2 then begin
       if error then return
       print,string(nfil,   $
 	    format='("Insert flux rope (1=yes):   nfil  =",i2)')
-      
-      
+
+
 endif else begin
 ;print,'SETUP 3'
 nrelax=0
@@ -1587,38 +1587,38 @@ error=get_param(1,'nmajor',nmajor,/integer)
       if error then return
       print,string(nmajor,   $
 	    format='("Major time steps:           nmajor=",i5)')
-	    
-	    
+
+
       nminor=1
-	    
+
       error=get_param(1,'nstrt',nstrt,/integer)
       if error then return
       print,string(nstrt,   $
 	    format='("Start frame:           nstrt=",i5)')
-	    
+
       nrep=500
-	    
+
 	    error=get_param(1,'nend',nend,/integer)
       if error then return
       print,string(nend,   $
 	    format='("Ending frame:           nend=",i5)')
-	    
-	    
+
+
       nfil=0
-      
-      
+
+
       openr,10,dir+'param1'
       readf,10,dum
       readf,10,dum,dum,dum
       readf,10,dum
       readf,10,time_s
       close,10
-      
-      
+
+
       dtime=60./time_s
-      
+
 endelse
- 
+
 ;
 ;print,string(nrelax,format='("  nrelax=",i5)')
 ;print,string(nmajor,nminor,nrep,  $
@@ -2123,7 +2123,7 @@ end
 ; print,string(np0,format='("Number of nulls:  np0=",i5)')
 ; ;
 ; end
-; 
+;
 ; ;------------------------------------------------------------------
 ; ;  Launch field lines from null:
 ; ;------------------------------------------------------------------
@@ -2163,7 +2163,7 @@ end
 ;   np=np+npts
 ; endelse
 ; end
-; 
+;
 ; ;------------------------------------------------------------------
 ; ;  Compute Quasi-Separatrix Layer (QSL) Map:
 ; ;------------------------------------------------------------------
@@ -2290,7 +2290,7 @@ end
 ; print,'Saved on '+map_file
 ; print,'-----'
 ; end
-; 
+;
 ; ;------------------------------------------------------------------
 ; ;  Restore Quasi-Separatrix Layer (QSL) Map:
 ; ;------------------------------------------------------------------
@@ -2486,9 +2486,24 @@ print,'Restore '+file
 aax=fltarr(nx,ny+1,nz+1)
 aay=fltarr(nx+1,ny,nz+1)
 aaz=fltarr(nx+1,ny+1,nz)
-readu,1,aax
-readu,1,aay
-readu,1,aaz
+; apkp - s
+aax_dum = FLTARR(nx, nz+1)
+aay_dum = FLTARR(nx+1, nz+1)
+aaz_dum = FLTARR(nx+1, nz)
+; readu,1,aax
+; readu,1,aay
+; readu,1,aaz
+READU,1,aax_dum
+READU,1,aay_dum
+READU,1,aaz_dum
+FOR j = 0, ny DO BEGIN
+  aax[*, j, *] = aax_dum
+  aaz[*, j, *] = aaz_dum
+ENDFOR
+FOR j = 0, ny - 1 DO BEGIN
+  aay[*, j, *] = aay_dum
+ENDFOR
+; apkp - e
 close,1
 prog_field
 end
@@ -3263,7 +3278,7 @@ if uvalue eq 'VIEW' or uvalue eq 'VIEW0' or  $
   yrange=[yrmin,yrmax]
   widget_control,w2d.zmin,get_value=zrmin
   widget_control,w2d.zmax,get_value=zrmax
-  zrange=[zrmin,zrmax] 
+  zrange=[zrmin,zrmax]
   case ptyp of
   0: begin
      xz=0 & yz=0 & sz=0    ; XY
@@ -3419,7 +3434,7 @@ end
 pro plot2d,pos,xz=xz,yz=yz,sz=sz,                            $ ; views
            xrange=xrange,yrange=yrange,zrange=zrange,        $ ; xyz range
            cont=cont,cm=cm,nlev=nlev,greyscale=greyscale, $
-           abso=abso,vect=vect,vm=vm,novect=novect,               $ 
+           abso=abso,vect=vect,vm=vm,novect=novect,               $
            flid=flid,flin=flin,smin=smin,smax=smax,nwin=nwin,null=null,     $
            xtra=xtra,notitle=notitle,epsfile=epsfile
 @hexa.blk
@@ -3565,7 +3580,7 @@ if ptyp gt 0 then begin   ; Show vertical slices
          3: b3=fy3
          endcase
          cchr=cchr+'_Y'
-       endelse 
+       endelse
      endif
      case vect of
      0: begin & b1=bx3 & b2=bz3 & end
@@ -3634,7 +3649,7 @@ if ptyp gt 0 then begin   ; Show vertical slices
          3: b3=fx3
          endcase
          cchr=cchr+'_X'
-       endelse 
+       endelse
      endif
      case vect of
      0: begin & b1=by3 & b2=bz3 & end
@@ -3777,7 +3792,7 @@ endif else begin                         ; Show horizontal slice
       3: b3=fz3
       endcase
       cchr=cchr+'_Z'
-    endelse 
+    endelse
   endif
   case vect of
   0: begin & b1=bx3 & b2=by3 & end
@@ -3959,7 +3974,7 @@ plot,xrange_plt,yrange_plt,/nodata,/noerase,     $
   position=position,color=cc1,           $
   xrange=xrange_plt,xstyle=1,xtitle=xtitle,  $
   yrange=yrange_plt,ystyle=1,ytitle=ytitle
-  
+
 endelse
 ;
 ;  Plot title:
@@ -3974,7 +3989,7 @@ endelse
 ;
 ;  Vectors:
 ;
-if not keyword_set(novect) then begin 
+if not keyword_set(novect) then begin
   velovect,b1,b2,vv1,vv2,/noerase,                $
     position=position,length=length,color=cc1,       $
     xrange=xrange_plt,xstyle=1,yrange=yrange_plt,ystyle=1
@@ -3982,7 +3997,7 @@ endif
 ;
 ;  Contours (greyscale = 0, 1 or 3):
 ;
-if greyscale le 1 or greyscale eq 3 then begin 
+if greyscale le 1 or greyscale eq 3 then begin
   if not keyword_set(nlev) then nlev=5
   fmt='("cmin=",f9.3,", cmax=",f9.3,", clev=",10(f8.3,:,","))'
   if cm gt 9999. then  $
@@ -4031,7 +4046,7 @@ endif
 ;
 ;  Connectivity map (greyscale=4):
 ;
-if greyscale eq 4 then begin 
+if greyscale eq 4 then begin
   file=string(dir+filename,nt,format='(a,"_",i5.5,"_con.sav")')
   openr,1,file,error=err
   close,1
@@ -4094,7 +4109,7 @@ endif
 ;  Show field lines (black/white) and nulls:
 ;
 if n_elements(flid) eq 0 then flid=0
-if flid eq 0 then begin 
+if flid eq 0 then begin
   if n_elements(np) eq 0 then subr_reset
   nnp=np
   if nnp eq 0 then begin
@@ -4189,7 +4204,7 @@ if nnp gt 0 then begin
 endif
 ;
 if n_elements(null) eq 0 then null=0
-if null gt 0 then begin 
+if null gt 0 then begin
   if n_elements(np0) eq 0 then np0=0
   nnp0=np0
   if nnp0 eq 0 then begin
@@ -4328,8 +4343,8 @@ w3d={w3d, draw: 0L,  alt: 0L, azim: 0L, wdth: 0L, xcen: 0L, ycen: 0L, $
           flin: 0L, smin: 0L, smax: 0L, flbw: 0L, snip: 0L, bars: 0L, $
           snum: 0L, zbse: 0L, zstr: 0L, sdel: 0L, nwin: 0L, $
           alt2: 0L, azm2: 0L, wdt2: 0L,  nt1: 0L,  nt2: 0L}
-          
-          
+
+
 ;           w3d={w3d, draw: 0L,  alt: 0L, azim: 0L, wdth: 0L, xcen: 0L, ycen: 0L, $
 ;           zcen: 0L, grey: 0L, cmax: 0L, nlev: 0L, bbox: 0L, flid: 0L, $
 ;           flin: 0L, smin: 0L, smax: 0L, flbw: 0L, snip: 0L, bars: 0L, $
@@ -4540,7 +4555,7 @@ if uval eq 'VIEW' or uval eq 'VIEW0' or uval eq 'EPSF' or  $
  ; widget_control,w3d.null,get_value=null
   plot3d,alt=alt,azim=azim,width=width,xcen=xcen,ycen=ycen,zcen=zcen,  $
          greyscale=greyscale,cm=cm,nlev=nlev,box=box,  $
-         flid=flid,flin=flin,smin=smin,smax=smax,flbw=flbw,zbase=zbase,  $ 
+         flid=flid,flin=flin,smin=smin,smax=smax,flbw=flbw,zbase=zbase,  $
          bars=bars,null=null,nwin=nwin,epsfile=epsfile
   return
 endif
@@ -4583,7 +4598,7 @@ if uval eq 'ROT' then begin
   dlnw =(alnw2-alnw1)/(nframe-1)
   answer=''
   ;read,prompt='Close XINTERANIMATE widget? (y/n) ',answer
-  
+
   ;if answer eq 'y' then xinteranimate,/close
   xinteranimate,set=[820,520,nframe],/showload,/track,/cycle, $
                 title='Plot3d Movie'
@@ -4861,7 +4876,7 @@ endif
 ;  Define starting points for field lines:
 ;
 if n_elements(flid) eq 0 then flid=0
-if flid eq 0 then begin 
+if flid eq 0 then begin
   if n_elements(np) eq 0 then subr_reset
   nnp=np
   if nnp eq 0 then begin
@@ -4940,7 +4955,7 @@ if nnp gt 0 then begin
       y2a=[y2a,ytrc(0:k-1)]  &  y2b=[y2b,ytrc(1:k)]
       z2a=[z2a,ztrc(0:k-1)]  &  z2b=[z2b,ztrc(1:k)]
       ccc=[ccc,replicate(ccp(n),k)]
-    endelse    
+    endelse
   endfor
   num2=n_elements(x2a)
   num1=num2
@@ -4974,7 +4989,7 @@ endelse
 ;  Plot nulls as 3D crosses:
 ;
 if n_elements(null) eq 0 then null=0
-if null gt 0 then begin 
+if null gt 0 then begin
   if n_elements(np0) eq 0 then np0=0
   nnp0=np0
   if nnp0 eq 0 then begin
@@ -5080,7 +5095,7 @@ if bars gt 0 then begin
                  +fy0*(fx1*bz1(i  ,j+1,n)+fx0*bz1(i+1,j+1,n))
                dbz(kz)=b2-b1
              endfor
-           endif 
+           endif
            end
         1: begin  ; y-ribs
            index=where(bz1(i1:i2,j1:j2-1,n)*bz1(i1:i2,j1+1:j2,n) lt 0.0,nzero)
@@ -5351,7 +5366,7 @@ xinteranimate,set=[zoom*nx,zoom*ny,num],/showload,/track, $
 
 aax0=fltarr(nx,ny+1,num)
 aay0=fltarr(nx+1,ny,num)
-              
+
 for n=0,num-1 do begin
   readu,1,ax
   aax0(*,*,n)=ax
@@ -5960,46 +5975,46 @@ zzz = intarr(1)
  for k=1,nz-2,interval do begin
   for j=1,ny-2,interval  do begin
    for i=1,nx-2,interval do begin
-       
-      if b2(i,j,k) ge bmax then begin ; if magnetic field is high...         
+
+      if b2(i,j,k) ge bmax then begin ; if magnetic field is high...
          if tz(i,j,k) gt 0. then begin
            if tz(i,j,k+interval) lt 0 then begin
              if pz(i,j,k) lt 0 and pz(i,j,k+interval) gt 0 then begin
-               if (px(i,j,k) lt 0 and px(i+interval,j,k) gt 0) or (py(i,j,k) lt 0 and py(i,j+interval,k) gt 0) then begin    
-                 if (tx(i,j,k) gt 0 and tx(i+interval,j,k) lt 0) or (ty(i,j,k) gt 0 and ty(i,j+interval,k) lt 0) then begin 
+               if (px(i,j,k) lt 0 and px(i+interval,j,k) gt 0) or (py(i,j,k) lt 0 and py(i,j+interval,k) gt 0) then begin
+                 if (tx(i,j,k) gt 0 and tx(i+interval,j,k) lt 0) or (ty(i,j,k) gt 0 and ty(i,j+interval,k) lt 0) then begin
                     n=n+1
                     xxx=add_element(xxx,i+0.5,n)
                     yyy=add_element(yyy,j+0.5,n)
-                    zzz=add_element(zzz,k+0.5,n)               
+                    zzz=add_element(zzz,k+0.5,n)
                  endif
                endif
-             endif           
+             endif
            endif
          endif
        endif
-         
-         
-;         interval=2 
-;         if b2(i,j,k) ge bmax then begin ; if magnetic field is high...         
-;          if tz(i,j,k-1) gt 0. and  tz(i,j,k+1) lt 0 then begin           
+
+
+;         interval=2
+;         if b2(i,j,k) ge bmax then begin ; if magnetic field is high...
+;          if tz(i,j,k-1) gt 0. and  tz(i,j,k+1) lt 0 then begin
 ;              if pz(i,j,k-1) lt 0 and pz(i,j,k+1) gt 0 then begin
-;                if (px(i-1,j,k) lt 0 and px(i+1,j,k) gt 0) or (py(i,j-1,k) lt 0 and py(i,j+1,k) gt 0) then begin                 
-;                  if (tx(i-1,j,k) gt 0 and tx(i+1,j,k) lt 0) or (ty(i,j-1,k) gt 0 and ty(i,j+1,k) lt 0) then begin 
+;                if (px(i-1,j,k) lt 0 and px(i+1,j,k) gt 0) or (py(i,j-1,k) lt 0 and py(i,j+1,k) gt 0) then begin
+;                  if (tx(i-1,j,k) gt 0 and tx(i+1,j,k) lt 0) or (ty(i,j-1,k) gt 0 and ty(i,j+1,k) lt 0) then begin
 ;                     n=n+1
 ;                     xxx=add_element(xxx,i,n)
 ;                     yyy=add_element(yyy,j,n)
-;                     zzz=add_element(zzz,k,n)               
+;                     zzz=add_element(zzz,k,n)
 ;                  endif
 ;                endif
-;              endif           
-;          endif 
-;        endif 
+;              endif
+;          endif
+;        endif
     endfor
    endfor
   endfor
-   print,'found ',n,' points belonging to flux rope axes!'     
+   print,'found ',n,' points belonging to flux rope axes!'
 print,'maximum height of FR:',max(zzz),' pixels'
-print,'maximum field strength probed:', threshold,'G' 
+print,'maximum field strength probed:', threshold,'G'
 
 nplus=0
 nminus=0
@@ -6023,12 +6038,12 @@ for l=0,n-1 do begin ; check alpha of FL
   if alpha gt 0 then begin
     nplus = nplus +1
     xxp = add_element(xxp,i,nplus)
-    yyp = add_element(yyp,j,nplus) 
+    yyp = add_element(yyp,j,nplus)
     zzp = add_element(zzp,k,nplus)
   endif else begin
     nminus = nminus+1
     xxn = add_element(xxn,i,nminus)
-    yyn = add_element(yyn,j,nminus) 
+    yyn = add_element(yyn,j,nminus)
     zzn = add_element(zzn,k,nminus)
   endelse
 endfor
@@ -6119,19 +6134,3 @@ version='2.0'     ; version of HEXA software
 cd,current=home   ; current directory
 
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

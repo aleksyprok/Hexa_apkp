@@ -24,6 +24,37 @@ CONTAINS
 
   END SUBROUTINE writedata
 
+  SUBROUTINE write_hexa(n)
+
+    INTEGER, INTENT(IN) :: n
+    INTEGER :: opt = 1
+    REAL(4), DIMENSION(nx, 2, nz+1) :: aax_dummy
+    REAL(4), DIMENSION(nx+1, 1, nz+1) :: aay_dummy
+    REAL(4), DIMENSION(nx+1, 2, nz) :: aaz_dummy
+
+    aax_dummy(:, 1, :) = REAL(aax, 4)
+    aax_dummy(:, 2, :) = REAL(aax, 4)
+    aay_dummy(:, 1, :) = REAL(aay, 4)
+    aaz_dummy(:, 1, :) = REAL(aaz, 4)
+    aaz_dummy(:, 2, :) = REAL(aaz, 4)
+
+    WRITE (filename, FMT = '(a, i5.5, "p")')  output_hexa, n
+
+    OPEN(UNIT = 42, &
+         FILE = FILENAME, &
+         FORM = 'UNFORMATTED', &
+         STATUS = 'UNKNOWN')
+    WRITE (42) opt
+    ! WRITE (42) aax_dummy
+    ! WRITE (42) aay_dummy
+    ! WRITE (42) aaz_dummy
+    WRITE (42) REAL(aax, 4)
+    WRITE (42) REAL(aay, 4)
+    WRITE (42) REAL(aaz, 4)
+    CLOSE (42)
+
+  END SUBROUTINE write_hexa
+
   SUBROUTINE output_diag
 
     REAL(num), DIMENSION(nx, 2:nz) :: b_c, bm_c ! bb and bbm at cell centre
@@ -41,10 +72,10 @@ CONTAINS
     mag_eng = 0.5_num * SUM(b_c) * delx * delz
 
     !poynting flux (ExBy-EyBx)
-    bxbase = 0.25_num * (bbx(1:nx, 2) + bbx(2:nx+1, 2) + &
-                         bbx(1:nx, 3) + bbx(2:nx+1, 3))
-    bybase = 0.25_num * (bby(1:nx, 2) + bby(1:nx, 2) + &
-                         bby(1:nx, 3) + bby(1:nx, 3))
+    bxbase = 0.25_num * (bbx(1:nx, 1) + bbx(2:nx+1, 1) + &
+                         bbx(1:nx, 2) + bbx(2:nx+1, 2))
+    bybase = 0.25_num * (bby(1:nx, 1) + bby(1:nx, 1) + &
+                         bby(1:nx, 2) + bby(1:nx, 2))
     exbase = eex(:, 2) + eex(:, 2)
     eybase = 0.5_num * (eey(1:nx, 2) + eey(2:nx+1, 2))
     poynting = (exbase * bybase - eybase * bxbase) * delx

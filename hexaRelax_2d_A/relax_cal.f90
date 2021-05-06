@@ -66,10 +66,16 @@ CONTAINS
       eey = ey
       eez = 0.5 * (ez(:, 1:nz) + ez(:, 2:nz+1))
 
-      bbx(:, 1:nz) = bbx(:, 1:nz) + dt * (eey(:, 2:nz+1) - eey(:, 1:nz)) / delz
-      bby(1:nx, 1:nz) = bby(1:nx, 1:nz) + dt * ((eez(2:nx+1, :) - eez(1:nx, :)) / delx - &
-                                                (eex(:, 2:nz+1) - eex(:, 1:nz)) / delz )
-      bbz(1:nx, :) = bbz(1:nx, :) - dt * (eey(2:nx+1, :) - eey(1:nx, :)) / delx
+      aax = aax - dt * eex
+      aay = aay - dt * eey
+      aaz = aaz - dt * eez
+
+      bbx(:, 1:nz) =-(aay(:, 2:nz+1) - aay(:, 1:nz)) / delz
+
+      bby(1:nx, 1:nz) = (aax(:     , 2:nz+1) - aax(:   , 1:nz)) / delz  &
+                      - (aaz(2:nx+1, :     ) - aaz(1:nx, :   )) / delx
+
+      bbz(1:nx, :) = (aay(2:nx+1, :) - aay(1:nx, :)) / delx
 
       CALL boundary_conditions(t)
 
@@ -82,6 +88,7 @@ CONTAINS
         t_snapshot = t_snapshot + dt_snapshots
         snapshot_num = snapshot_num + 1
         CALL writedata(snapshot_num)
+        CALL write_hexa(snapshot_num)
       END IF
 
       ! Set timestep
@@ -92,42 +99,5 @@ CONTAINS
     END DO
 
   END SUBROUTINE relax_routine
-
-  SUBROUTINE boundary_conditions(t)
-
-    REAL(num), INTENT(IN) :: t
-
-    ! Bounary conditions
-
-    bby(0, :) = bby(1, :)
-    bbz(0, :) = bbz(1, :)
-
-    bby(nx+1, :) = bby(nx, :)
-    bbz(nx+1, :) = bbz(nx, :)
-
-    l = kx * (1.0_num - 0.5_num * ramp_up(0.1_num * t))
-    DO ix = 1, nx + 1
-      bbx(ix, 0   ) = bx_nlff(xb(ix), 0.0_num, l)
-      bbx(ix, nz+1) = bx_nlff(xb(ix), 6.0_num, l)
-    END DO
-    DO ix = 0, nx + 1
-      bby(ix, 0   ) = by_nlff(xc(ix), 0.0_num, l)
-      bby(ix, nz+1) = by_nlff(xc(ix), 6.0_num, l)
-    END DO
-
-  END SUBROUTINE boundary_conditions
-
-  FUNCTION ramp_up(t)
-
-    REAL(num), INTENT(IN) :: t
-    REAL(num) :: ramp_up
-
-    IF (t .LE. 1.0_num) THEN
-      ramp_up = SIN(0.5_num * pi * t) ** 2
-    ELSE
-      ramp_up = 1.0_num
-    END IF
-
-  END FUNCTION ramp_up
 
 END MODULE cal
