@@ -43,7 +43,7 @@ CONTAINS
     REAL(num), INTENT(IN) :: x, z, l
     REAL(num) :: bx_nlff
 
-    bx_nlff = (l / kx) * SIN(kx * x) * EXP(-l * z)
+    bx_nlff = (l / kx) * SIN(kx * x) * COSH(l * (z + Lz))
 
   END FUNCTION bx_nlff
 
@@ -52,7 +52,7 @@ CONTAINS
     REAL(num), INTENT(IN) :: x, z, l
     REAL(num) :: by_nlff
 
-    by_nlff = SQRT(1 - l * l / (kx * kx)) * SIN(kx * x) * EXP(-l * z)
+    by_nlff = -SQRT(1 - l * l / (kx * kx)) * SIN(kx * x) * SINH(l * (z + Lz))
 
   END FUNCTION by_nlff
 
@@ -61,7 +61,7 @@ CONTAINS
     REAL(num), INTENT(IN) :: x, z, l
     REAL(num) :: bz_nlff
 
-    bz_nlff = COS(kx * x) * EXP(-l * z)
+    bz_nlff = -COS(kx * x) * SINH(l * (z + Lz))
 
   END FUNCTION bz_nlff
 
@@ -70,7 +70,7 @@ CONTAINS
     REAL(num), INTENT(IN) :: x, z
     REAL(num) :: ay_poten
 
-    ay_poten = SIN(kx * x) * EXP(-kx * z) / kx
+    ay_poten = -SIN(kx * x) * SINH(kx * (z + Lz)) / kx
 
   END FUNCTION ay_poten
 
@@ -104,22 +104,25 @@ CONTAINS
 
     ! Bounary conditions
 
-    bby(0, :) = bby(1, :)
-    bbz(0, :) = bbz(1, :)
+    bby(0, :) = bby(nx, :)
+    bbz(0, :) = bbz(nx, :)
 
-    bby(nx+1, :) = bby(nx, :)
-    bbz(nx+1, :) = bbz(nx, :)
+    bby(nx+1, :) = bby(1, :)
+    bbz(nx+1, :) = bbz(1, :)
 
     alpha = 0.5_num * kx * ramp_up(0.1_num * t)
     l = SQRT(kx * kx - alpha * alpha)
     DO ix = 1, nx + 1
       bbx(ix, 0   ) = bx_nlff(xb(ix), 0.0_num, l)
-      bbx(ix, nz+1) = bx_nlff(xb(ix), 6.0_num, l)
+      ! bbx(ix, nz+1) = bx_nlff(xb(ix), 6.0_num, l)
     END DO
     DO ix = 0, nx + 1
       bby(ix, 0   ) = by_nlff(xc(ix), 0.0_num, l)
-      bby(ix, nz+1) = by_nlff(xc(ix), 6.0_num, l)
+      ! bby(ix, nz+1) = by_nlff(xc(ix), 6.0_num, l)
     END DO
+
+    bbx(:, nz+1) = bbx(:, nz)
+    bby(:, nz+1) = bby(:, nz)
 
   END SUBROUTINE boundary_conditions
 

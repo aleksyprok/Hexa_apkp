@@ -30,7 +30,7 @@ MODULE var_global
   !  Model parameters:
   REAL(num) :: etad
   REAL(num), PARAMETER :: kx = pi / 3.0_num
-  REAL(num) :: l = kx
+  REAL(num) :: l = kx, Lz = 6.0_num
 
   ! Variables associated with length and time
   REAL(num) :: length_cm  ! Length of one Hexa length unit in cm
