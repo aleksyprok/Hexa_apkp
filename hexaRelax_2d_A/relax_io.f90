@@ -1,6 +1,7 @@
 MODULE io
 
   USE var_global
+  USE grid
 
   IMPLICIT NONE
 
@@ -61,8 +62,8 @@ CONTAINS
     REAL(num), DIMENSION(nx) :: exbase, eybase, bxbase, bybase, poynting
     REAL(num), DIMENSION(nx+1, nz+1) :: vv ! Velocity squared
     REAL(num), DIMENSION(nx, 2:nz) :: diss
-    REAL(num), DIMENSION(nx, 2:nz) :: divb
-    REAL(num) :: mag_eng, sz, q, min_divb, max_divb, mean_divb
+    REAL(num), DIMENSION(nx, ny, nz) :: bx_c, bx_a, by_c, by_a, bz_c, bz_a
+    REAL(num) :: mag_eng, sz, q, min_diva, max_diva, mean_diva
 
     ! Calculate magnetic energy
     b_c = 0.25_num * (bb(1:nx  , 2:nz  ) + bb(2:nx+1, 2:nz  ) + &
@@ -76,7 +77,7 @@ CONTAINS
                          bbx(1:nx, 2) + bbx(2:nx+1, 2))
     bybase = 0.25_num * (bby(1:nx, 1) + bby(1:nx, 1) + &
                          bby(1:nx, 2) + bby(1:nx, 2))
-    exbase = eex(:, 2) + eex(:, 2)
+    exbase = eex(:, 2)
     eybase = 0.5_num * (eey(1:nx, 2) + eey(2:nx+1, 2))
     poynting = (exbase * bybase - eybase * bxbase) * delx
     sz = SUM(poynting)
@@ -89,22 +90,28 @@ CONTAINS
     diss = diss * bm_c
     q = SUM(diss) * delx * delz
 
-    ! div B
-    divb = (bbx(2:nx+1, 2:nz) - bbx(1:nx, 2:nz)) / delx &
-         + (bbz(1:nx, 3:nz+1) - bbz(1:nx, 2:nz)) / delz
-    divb = ABS(divb)
-    min_divb = MINVAL(divb)
-    max_divb = MAXVAL(divb)
-    mean_divb = SUM(divb) / REAL(nx * nz, num)
+    ! div A
+    diva = (aax(2:nx, 2:nz) - aax(1:nx-1, 2:nz)) / delx &
+         + (aaz(2:nx, 2:nz) - aaz(2:nx, 1:nz-1)) / delz
+    diva = ABS(diva)
+    min_diva = MINVAL(diva)
+    max_diva = MAXVAL(diva)
+    mean_diva = SUM(diva) / REAL(nx * nz, num)
+
+    ! Analytic solutions vs. numerical solution
+
+    bx_c = 0.5_num * (bbx(1:nx, 1:nz) + bbx(2:nx+1, 1:nz))
+    by_c = bby(1:nx, 1:nz)
+    bz_c = 0.5_num * (bbz(1:nx, 1:nz) + bbz(1:nx, 2:nz+1))
 
     WRITE(50, *) t, &
                  dt, &
                  mag_eng, &
                  sz, &
                  q, &
-                 min_divb, &
-                 max_divb, &
-                 mean_divb
+                 min_diva, &
+                 max_diva, &
+                 mean_diva
 
   END SUBROUTINE output_diag
 

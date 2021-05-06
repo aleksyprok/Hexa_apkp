@@ -71,17 +71,17 @@ ax.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
 
 ax = fig.add_subplot(337)
 ax.plot(t, min_diva)
-ax.set_title('Min divB')
+ax.set_title('Min divA')
 ax.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
 
 ax = fig.add_subplot(338)
 ax.plot(t, max_diva)
-ax.set_title('Max divB')
+ax.set_title('Max divA')
 ax.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
 
 ax = fig.add_subplot(339)
 ax.plot(t, mean_diva)
-ax.set_title('Mean divB')
+ax.set_title('Mean divA')
 ax.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
 
 plt.show()

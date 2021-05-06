@@ -144,7 +144,7 @@ CONTAINS
     ALLOCATE(aax(1:nx, 1:nz+1))
     ALLOCATE(aay(1:nx+1, 1:nz+1))
     ALLOCATE(aaz(1:nx+1, 1:nz))
-    ALLOCATE(diva(1:nx+1, 1:nz+1))
+    ALLOCATE(diva(2:nx, 2:nz))
 
     ALLOCATE(bbx(1:nx+1, 0:nz+1))
     ALLOCATE(bby(0:nx+1, 0:nz+1))
