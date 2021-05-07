@@ -43,7 +43,7 @@ CONTAINS
     REAL(num), INTENT(IN) :: x, z, l
     REAL(num) :: bx_nlff
 
-    bx_nlff = (l / kx) * SIN(kx * x) * COSH(l * (z - Lz)) / SINH(-l * Lz)
+    bx_nlff = -(l / kx) * SIN(kx * x) * COSH(l * (z - Lz)) / SINH(-l * Lz)
 
   END FUNCTION bx_nlff
 
@@ -52,7 +52,7 @@ CONTAINS
     REAL(num), INTENT(IN) :: x, z, l
     REAL(num) :: by_nlff
 
-    by_nlff = -SQRT(1 - l * l / (kx * kx)) * SIN(kx * x) * SINH(l * (z - Lz)) / SINH(-l * Lz)
+    by_nlff = SQRT(1 - l * l / (kx * kx)) * SIN(kx * x) * SINH(l * (z - Lz)) / SINH(-l * Lz)
 
   END FUNCTION by_nlff
 
@@ -61,7 +61,7 @@ CONTAINS
     REAL(num), INTENT(IN) :: x, z, l
     REAL(num) :: bz_nlff
 
-    bz_nlff = -COS(kx * x) * SINH(l * (z - Lz)) / SINH(-l * Lz)
+    bz_nlff = COS(kx * x) * SINH(l * (z - Lz)) / SINH(-l * Lz)
 
   END FUNCTION bz_nlff
 
@@ -70,11 +70,13 @@ CONTAINS
     REAL(num), INTENT(IN) :: x, z
     REAL(num) :: ay_poten
 
-    ay_poten = -SIN(kx * x) * SINH(kx * (z - Lz)) / kx / SINH(-kx * Lz)
+    ay_poten = SIN(kx * x) * SINH(kx * (z - Lz)) / kx / SINH(-kx * Lz)
 
   END FUNCTION ay_poten
 
   SUBROUTINE calc_initial_field
+
+    REAL(num) :: alpha
 
     aax = 0
 
@@ -94,6 +96,23 @@ CONTAINS
     bbz(1:nx, :) = (aay(2:nx+1, :) - aay(1:nx, :)) / delx
 
     CALL boundary_conditions(0.0_num)
+
+    alpha = 0.5_num * kx
+    DO iz = 1, nz
+      DO ix = 1, nx + 1
+        bx_a(ix, iz) = bx_nlff(xb(ix), zc(iz), SQRT(kx * kx - alpha * alpha))
+      END DO
+    END DO
+    DO iz = 1, nz
+      DO ix = 1, nx
+        by_a(ix, iz) = by_nlff(xc(ix), zc(iz), SQRT(kx * kx - alpha * alpha))
+      END DO
+    END DO
+    DO iz = 1, nz + 1
+      DO ix = 1, nx
+        bz_a(ix, iz) = bz_nlff(xc(ix), zb(iz), SQRT(kx * kx - alpha * alpha))
+      END DO
+    END DO
 
   END SUBROUTINE calc_initial_field
 
@@ -161,6 +180,10 @@ CONTAINS
     ALLOCATE( bb(1:nx+1, 1:nz+1))
     ALLOCATE(bbm(1:nx+1, 1:nz+1))
 
+    ALLOCATE(bx_a(1:nx+1, 1:nz))
+    ALLOCATE(by_a(1:nx, 1:nz))
+    ALLOCATE(bz_a(1:nx, 1:nz+1))
+
     ALLOCATE(cx(1:nx+1, 1:nz+1))
     ALLOCATE(cy(1:nx+1, 1:nz+1))
     ALLOCATE(cz(1:nx+1, 1:nz+1))
@@ -186,6 +209,7 @@ CONTAINS
     DEALLOCATE(ccx, ccy, ccz)
     DEALLOCATE(bx, by, bz)
     DEALLOCATE(bb, bbm)
+    DEALLOCATE(bx_a, by_a, bz_a)
     DEALLOCATE(cx, cy, cz)
     DEALLOCATE(vx, vy, vz)
     DEALLOCATE(ex, ey, ez)

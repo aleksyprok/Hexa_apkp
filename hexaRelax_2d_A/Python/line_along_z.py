@@ -10,13 +10,13 @@ def ramp_up(t):
                                       1 * (t >  1)
 
 def bx_ana_fun(x, z, l):
-    return (l / kx) * np.sin(kx * x) * np.cosh((l * (z - Lz))) / np.sinh(-l * Lz)
+    return -(l / kx) * np.sin(kx * x) * np.cosh((l * (z - Lz))) / np.sinh(-l * Lz)
 
 def by_ana_fun(x, z, l):
-    return -np.sqrt(1 - l * l / (kx * kx)) * np.sin(kx * x) * np.sinh((l * (z - Lz))) / np.sinh(-l * Lz)
+    return np.sqrt(1 - l * l / (kx * kx)) * np.sin(kx * x) * np.sinh((l * (z - Lz))) / np.sinh(-l * Lz)
 
 def bz_ana_fun(x, z, l):
-    return -np.cos(kx * x) * np.sinh((l * (z - Lz))) / np.sinh(-l * Lz)
+    return np.cos(kx * x) * np.sinh((l * (z - Lz))) / np.sinh(-l * Lz)
 
 start_time = time.time()
 
@@ -35,7 +35,7 @@ Lz = 6
 xc = np.linspace(-dx / 2, 6 + dx / 2, nx + 2)
 xb = np.linspace(0, 6, nx + 1)
 zc = np.linspace(-dz / 2, 6 + dz / 2, nz + 2)
-zb = np.linspace(-dz / 2, 6 + dz / 2, nz + 2)
+zb = np.linspace(0, 6, nz + 1)
 
 fig = plt.figure()
 fig_size = fig.get_size_inches()

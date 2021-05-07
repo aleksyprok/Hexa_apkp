@@ -23,7 +23,7 @@ MODULE var_global
   REAL(num), DIMENSION(:, :), ALLOCATABLE :: ccx, ccy, ccz, cx, cy, cz
   REAL(num), DIMENSION(:, :), ALLOCATABLE :: eex, eey, eez, ex, ey, ez
   REAL(num), DIMENSION(:, :), ALLOCATABLE :: vx, vy, vz
-  REAL(num), DIMENSION(:, :), ALLOCATABLE :: bb, bbm
+  REAL(num), DIMENSION(:, :), ALLOCATABLE :: bb, bbm, bx_a, by_a, bz_a
 
   REAL(num), DIMENSION(:), ALLOCATABLE :: xc, xb, yc, yb, zc, zb
 

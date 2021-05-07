@@ -62,8 +62,11 @@ CONTAINS
     REAL(num), DIMENSION(nx) :: exbase, eybase, bxbase, bybase, poynting
     REAL(num), DIMENSION(nx+1, nz+1) :: vv ! Velocity squared
     REAL(num), DIMENSION(nx, 2:nz) :: diss
-    REAL(num), DIMENSION(nx, ny, nz) :: bx_c, bx_a, by_c, by_a, bz_c, bz_a
-    REAL(num) :: mag_eng, sz, q, min_diva, max_diva, mean_diva
+    REAL(num), DIMENSION(nx+1, nz) :: bx_err
+    REAL(num), DIMENSION(nx, nz) :: by_err
+    REAL(num), DIMENSION(nx, nz+1) :: bz_err
+    REAL(num), DIMENSION(nx, 2:nz) :: err_array
+    REAL(num) :: mag_eng, sz, q, min_diva, max_diva, mean_diva, err
 
     ! Calculate magnetic energy
     b_c = 0.25_num * (bb(1:nx  , 2:nz  ) + bb(2:nx+1, 2:nz  ) + &
@@ -100,9 +103,21 @@ CONTAINS
 
     ! Analytic solutions vs. numerical solution
 
-    bx_c = 0.5_num * (bbx(1:nx, 1:nz) + bbx(2:nx+1, 1:nz))
-    by_c = bby(1:nx, 1:nz)
-    bz_c = 0.5_num * (bbz(1:nx, 1:nz) + bbz(1:nx, 2:nz+1))
+    bx_err = (bbx(:, 1:nz) - bx_a) ** 2.0_num
+    by_err = (bby(1:nx, 1:nz) - by_a) ** 2.0_num
+    bz_err = (bbz(1:nx, :) - bz_a) ** 2.0_num
+    ! print*, MAXVAL(bx_err), MAXVAL(by_err), MAXVAL(bz_err)
+    ! print*, ' -------------------------------------'
+    ! print*, bx_a(1:5, 1)
+    ! print*, ' -------------------------------------'
+    ! print*, bbx(1:5, 1)
+
+
+
+    err_array = 0.5_num * (bx_err(1:nx, 2:nz) + bx_err(2:nx+1, 2:nz)) &
+              + by_err(:, 2:nz) &
+              + 0.5_num * (bz_err(:, 2:nz) + bz_err(:, 3:nz+1))
+    err = SUM(err_array) * delx * delz
 
     WRITE(50, *) t, &
                  dt, &
@@ -111,7 +126,8 @@ CONTAINS
                  q, &
                  min_diva, &
                  max_diva, &
-                 mean_diva
+                 mean_diva, &
+                 err
 
   END SUBROUTINE output_diag
 

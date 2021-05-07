@@ -10,6 +10,7 @@ q = np.array([])
 min_diva = np.array([])
 max_diva = np.array([])
 mean_diva = np.array([])
+err = np.array([])
 file = open('run1/diagnostic', 'r')
 n = 0
 while True:
@@ -27,6 +28,7 @@ while True:
     min_diva  = np.append(min_diva,  line[5])
     max_diva  = np.append(max_diva,  line[6])
     mean_diva  = np.append(mean_diva,  line[7])
+    err  = np.append(err,  line[8])
 
 print("len(t) =", len(t))
 
@@ -70,8 +72,11 @@ ax.set_title('t')
 ax.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
 
 ax = fig.add_subplot(337)
-ax.plot(t, min_diva)
-ax.set_title('Min divA')
+ax.plot(t, err)
+ax.set_title(r'$\int |\mathbf{B}_{num} - \mathbf{B}_{ana}|^2 dV$')
+lowerlim = 0
+upperlim = ax.get_ylim()[1]
+ax.set_ylim(lowerlim, upperlim)
 ax.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
 
 ax = fig.add_subplot(338)

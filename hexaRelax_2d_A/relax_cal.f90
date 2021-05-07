@@ -66,6 +66,10 @@ CONTAINS
       eey = ey
       eez = 0.5 * (ez(:, 1:nz) + ez(:, 2:nz+1))
 
+      ! Overwrite electric field
+      ! eex(:, 1) = 0.0_num
+      ! eey(:, 1) = 0.0_num
+
       aax = aax - dt * eex
       aay = aay - dt * eey
       aaz = aaz - dt * eez
