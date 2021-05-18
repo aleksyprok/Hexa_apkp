@@ -5,28 +5,15 @@ import os
 import time
 import glob
 
-def ramp_up(t):
-    return np.sin(0.5 * np.pi * t) ** 2 * (t <= 1) + \
-                                      1 * (t >  1)
-
-def bx_ana_fun(x, z, l):
-    return -(l / kx) * np.sin(kx * x) * np.cosh((l * (z - Lz))) / np.sinh(-l * Lz)
-
-def by_ana_fun(x, z, l):
-    return np.sqrt(1 - l * l / (kx * kx)) * np.sin(kx * x) * np.sinh((l * (z - Lz))) / np.sinh(-l * Lz)
-
-def bz_ana_fun(x, z, l):
-    return np.cos(kx * x) * np.sinh((l * (z - Lz))) / np.sinh(-l * Lz)
-
 start_time = time.time()
 
 file_number = len(glob.glob('run1/relax_*'))
 print(file_number)
 
-output_dir = 'Figures/Video/along_x'
+output_dir = 'Figures/Video/diff_along_x'
 
-nx = 256
-nz = 256
+nx = 2048
+nz = 2048
 dx = np.float64(6 / nx)
 dz = np.float64(6 / nz)
 kx = np.pi / 3
@@ -37,21 +24,15 @@ xb = np.linspace(0, 6, nx + 1)
 zc = np.linspace(-dz / 2, 6 + dz / 2, nz + 2)
 zb = np.linspace(0, 6, nz + 1)
 
-alpha = 0.5 * kx
-l = np.sqrt(kx * kx - alpha * alpha)
-
-X, Z = np.meshgrid(xb, zc)
-bx_ana = bx_ana_fun(X, Z, l)
-
-X, Z = np.meshgrid(xc, zc)
-by_ana = by_ana_fun(X, Z, l)
-
-X, Z = np.meshgrid(xc, zb)
-bz_ana = bz_ana_fun(X, Z, l)
-
-b_ana = {"bbx" : bx_ana, \
-         "bby" : by_ana, \
-         "bbz" : bz_ana}
+filename = 'run1/relax_' + '{:05d}'.format(0)
+file = FortranFile(filename, 'r')
+t = file.read_reals('float64')[0]
+bbx = file.read_reals('float64').reshape((nz + 2, nx + 1), order = "C")
+bby = file.read_reals('float64').reshape((nz + 2, nx + 2), order = "C")
+bbz = file.read_reals('float64').reshape((nz + 1, nx + 2), order = "C")
+bb0 = {"bbx" : bbx, \
+       "bby" : bby, \
+       "bbz" : bbz}
 
 fig = plt.figure()
 fig_size = fig.get_size_inches()
@@ -87,9 +68,8 @@ for n in range(0, file_number, 1):
             if i == 3: k += 1
             if i == 4: k += 1
             ax = fig.add_subplot(3, 3, k)
-            ax.plot(bb[var][iz, :])
-            # ax.plot(b_ana[var][iz, :])
-            ax.set_title(var + ', iz = ' + str(iz))
+            ax.plot(bb[var][iz, :] - bb0[var][iz, :])
+            ax.set_title(var + ' - ' + var + '0' + ', iz = ' + str(iz))
             if i == 1:
                 ax.text(0.35, 1.1, \
                     	"t = " + "{:10.2e}".format(t), \

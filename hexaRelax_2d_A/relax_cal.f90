@@ -16,7 +16,9 @@ CONTAINS
     INTEGER :: n, snapshot_num
 
     ! Define frictional coefficient in dimensionless units
-    frc = frc_coef * 1.E10 / (length_cm * length_cm) * time_s
+    frc = frc_coef * 1.e10_num / (length_cm * length_cm) * time_s
+
+    PRINT*, "frc =", frc
 
     t = 0.0_num ! Set local time variable to zero
     t_snapshot = 0.0_num
@@ -26,7 +28,8 @@ CONTAINS
     snapshot_num = 0
     n = 0
 
-    DO WHILE (t .LT. 1.E4_num)
+    ! DO WHILE (t .LT. 1.E4_num)
+    DO WHILE (n .LE. 2)
 
       n = n + 1
       t = t + dt
@@ -50,9 +53,9 @@ CONTAINS
         ENDDO
       ENDDO
 
-      cx = 0.5 * (ccx(0:nx, :) + ccx(1:nx+1, :))
+      cx = 0.5_num * (ccx(0:nx, :) + ccx(1:nx+1, :))
       cy = ccy
-      cz = 0.5 * (ccz(:, 0:nz) + ccz(:, 1:nz+1))
+      cz = 0.5_num * (ccz(:, 0:nz) + ccz(:, 1:nz+1))
 
       vx = frc * (cy * bz - cz * by) / bbm
       vy = frc * (cz * bx - cx * bz) / bbm
@@ -62,9 +65,9 @@ CONTAINS
       ey = vx * bz - vz * bx
       ez = vy * bx - vx * by
 
-      eex = 0.5 * (ex(1:nx, :) + ex(2:nx+1, :))
+      eex = 0.5_num * (ex(1:nx, :) + ex(2:nx+1, :))
       eey = ey
-      eez = 0.5 * (ez(:, 1:nz) + ez(:, 2:nz+1))
+      eez = 0.5_num * (ez(:, 1:nz) + ez(:, 2:nz+1))
 
       ! Overwrite electric field
       ! eex(:, 1) = 0.0_num
@@ -83,22 +86,29 @@ CONTAINS
 
       CALL boundary_conditions(t)
 
-      IF (MOD(n, 100) .EQ. 0) PRINT*, n, t
-      IF (t .GE. t_eneg_shot) THEN
-        t_eneg_shot = t_eneg_shot + dt_eneg_shot
-        CALL output_diag
-      END IF
-      IF (t .GE. t_snapshot) THEN
-        t_snapshot = t_snapshot + dt_snapshots
-        snapshot_num = snapshot_num + 1
-        CALL writedata(snapshot_num)
-        CALL write_hexa(snapshot_num)
-      END IF
+      ! IF (MOD(n, 100) .EQ. 0) PRINT*, n, t
+      ! IF (t .GE. t_eneg_shot) THEN
+      !   t_eneg_shot = t_eneg_shot + dt_eneg_shot
+      !   CALL output_diag
+      ! END IF
+      ! IF (t .GE. t_snapshot) THEN
+      !   t_snapshot = t_snapshot + dt_snapshots
+      !   snapshot_num = snapshot_num + 1
+      !   CALL writedata(snapshot_num)
+      !   CALL write_hexa(snapshot_num)
+      ! END IF
+      PRINT*, n, t
+      CALL output_diag
+      snapshot_num = snapshot_num + 1
+      CALL writedata(snapshot_num)
+      CALL write_hexa(snapshot_num)
+      PRINT*, dt
 
       ! Set timestep
-      dt = 0.1_num *  MINVAL( (/ delx / MAXVAL( (/ ABS(vx), TINY(0.0_num) /) ), &
-                                 delz / MAXVAL( (/ ABS(vz), TINY(0.0_num) /) ), &
-                                 delx * delz / etad /) )
+      ! dt = 0.1_num *  MINVAL( (/ delx / MAXVAL( (/ ABS(vx), TINY(0.0_num) /) ), &
+      !                            delz / MAXVAL( (/ ABS(vz), TINY(0.0_num) /) ), &
+      !                            delx * delz / etad /) )
+      dt = 1.e-2_num
 
     END DO
 

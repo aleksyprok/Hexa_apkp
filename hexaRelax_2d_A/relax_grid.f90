@@ -11,8 +11,8 @@ CONTAINS
     length_cm = 2.95436E9_num
     time_s = 5760.0_num
 
-    nx = 256
-    nz = 256
+    nx = 2048
+    nz = 2048
 
     delx = 6.0_num / REAL(nx, num)
     delz = 6.0_num / REAL(nz, num)
@@ -129,7 +129,8 @@ CONTAINS
     bby(nx+1, :) = bby(1, :)
     bbz(nx+1, :) = bbz(1, :)
 
-    alpha = 0.5_num * kx * ramp_up(0.1_num * t)
+    ! alpha = 0.5_num * kx * ramp_up(0.1_num * t)
+    alpha = 0.5_num * kx
     l = SQRT(kx * kx - alpha * alpha)
     DO ix = 1, nx + 1
       bbx(ix, 0   ) = bx_nlff(xb(ix), 0.0_num, l)

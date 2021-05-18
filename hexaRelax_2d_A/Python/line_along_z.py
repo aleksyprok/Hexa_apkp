@@ -25,8 +25,8 @@ print(file_number)
 
 output_dir = 'Figures/Video/along_z'
 
-nx = 256
-nz = 256
+nx = 2048
+nz = 2048
 dx = np.float64(6 / nx)
 dz = np.float64(6 / nz)
 kx = np.pi / 3
@@ -48,7 +48,7 @@ var_list = ["bbx", "bby", "bbz"]
 for var in var_list:
     os.makedirs(output_dir + '/' + var, exist_ok = True)
 
-for n in range(0, file_number, 100):
+for n in range(0, file_number, 1):
 
     filename = 'run1/relax_' + '{:05d}'.format(n)
     file = FortranFile(filename, 'r')
@@ -88,7 +88,7 @@ for n in range(0, file_number, 100):
             if i == 4: k += 1
             ax = fig.add_subplot(3, 3, k)
             ax.plot(bb[var][:, ix])
-            ax.plot(b_ana[var][:, ix])
+            # ax.plot(b_ana[var][:, ix])
             ax.set_title(var + ', ix = ' + str(ix))
             if i == 1:
                 ax.text(0.35, 1.1, \
