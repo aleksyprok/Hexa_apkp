@@ -25,8 +25,8 @@ print(file_number)
 
 output_dir = 'Figures/Video/along_z'
 
-nx = 2048
-nz = 2048
+nx = 512
+nz = 512
 dx = np.float64(6 / nx)
 dz = np.float64(6 / nz)
 kx = np.pi / 3

@@ -25,8 +25,8 @@ print(file_number)
 
 output_dir = 'Figures/Video/along_x'
 
-nx = 256
-nz = 256
+nx = 512
+nz = 512
 dx = np.float64(6 / nx)
 dz = np.float64(6 / nz)
 kx = np.pi / 3
@@ -59,8 +59,9 @@ fig_size[0] = fig_size[0] * 3
 fig_size[1] = fig_size[1] * 3
 fig.set_size_inches(fig_size)
 
-iz_list = [0, 1, nz//4, nz//2, -nz//4, -2, -1]
-var_list = ["bbx", "bby", "bbz"]
+iz_list = [0, 1, 2, 3, 4, 5, 6]
+var_list = ["bbx", "bby", "bbz", "divb"]
+# var_list = ["bbx", "bby", "bbz"]
 for var in var_list:
     os.makedirs(output_dir + '/' + var, exist_ok = True)
 
@@ -73,11 +74,15 @@ for n in range(0, file_number, 1):
     bby = file.read_reals('float64').reshape((nz + 2, nx + 2), order = "C")
     bbz = file.read_reals('float64').reshape((nz + 1, nx + 2), order = "C")
 
+    divb = (bbx[1:-1,1:] - bbx[1:-1,:-1]) / dx \
+         + (bbz[1:,1:-1] - bbz[:-1,1:-1]) / dz
+
     print(n, t)
 
     bb = {"bbx" : bbx, \
           "bby" : bby, \
-          "bbz" : bbz}
+          "bbz" : bbz, \
+          "divb" : divb}
 
     for var in var_list:
         k = 0
@@ -88,7 +93,8 @@ for n in range(0, file_number, 1):
             if i == 4: k += 1
             ax = fig.add_subplot(3, 3, k)
             ax.plot(bb[var][iz, :])
-            # ax.plot(b_ana[var][iz, :])
+            if var != "divb":
+                ax.plot(b_ana[var][iz, :])
             ax.set_title(var + ', iz = ' + str(iz))
             if i == 1:
                 ax.text(0.35, 1.1, \

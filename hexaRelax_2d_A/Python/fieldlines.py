@@ -13,8 +13,8 @@ print(file_number)
 output_dir = 'Figures/Video/fieldlines'
 os.makedirs(output_dir, exist_ok = True)
 
-nx = 256
-nz = 256
+nx = 2048
+nz = 2048
 dx = np.float64(6 / nx)
 dz = np.float64(6 / nz)
 
@@ -40,7 +40,7 @@ start_points = np.array(start_points)
 
 fig = plt.figure()
 
-for n in range(0, file_number, 100):
+for n in range(0, file_number, 1):
 
     ax = fig.add_subplot(111)
     filename = 'run1/relax_' + '{:05d}'.format(n)
