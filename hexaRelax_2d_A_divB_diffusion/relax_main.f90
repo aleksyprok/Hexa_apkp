@@ -13,7 +13,7 @@ PROGRAM relax
   CALL arrayaloc
 
   basedt = timestep_s / time_s
-  etad = 0.05 * delx * delx / basedt
+  etad = delx * delx / basedt
   dt = 0.2 * delx * delx / etad
   dt = 1.e-2_num
 

@@ -71,22 +71,18 @@ CONTAINS
       eex(:, 1) = 0.0_num
       eey(:, 1) = 0.0_num
 
-      ! aax = aax - dt * eex
-      ! aay = aay - dt * eey
-      ! aaz = aaz - dt * eez
-      !
-      ! bbx(:, 1:nz) =-(aay(:, 2:nz+1) - aay(:, 1:nz)) / delz
-      !
-      ! bby(1:nx, 1:nz) = (aax(:     , 2:nz+1) - aax(:   , 1:nz)) / delz  &
-      !                 - (aaz(2:nx+1, :     ) - aaz(1:nx, :   )) / delx
-      !
-      ! bbz(1:nx, :) = (aay(2:nx+1, :) - aay(1:nx, :)) / delx
+      aax = aax - dt * eex
+      aay = aay - dt * eey
+      aaz = aaz - dt * eez
 
-      bbx(:, 1:nz) = bbx(:, 1:nz) + dt * (eey(:, 2:nz+1) - eey(:, 1:nz)) / delz
-      bby(1:nx, 1:nz) = bby(1:nx, 1:nz) + dt * ((eez(2:nx+1, :) - eez(1:nx, :)) / delx - &
-                                                (eex(:, 2:nz+1) - eex(:, 1:nz)) / delz )
-      bbz(1:nx, :) = bbz(1:nx, :) - dt * (eey(2:nx+1, :) - eey(1:nx, :)) / delx
-      bbz(:, 1) = 1.e3_num
+      bbx(:, 1:nz) =-(aay(:, 2:nz+1) - aay(:, 1:nz)) / delz
+
+      bby(1:nx, 1:nz) = (aax(:     , 2:nz+1) - aax(:   , 1:nz)) / delz  &
+                      - (aaz(2:nx+1, :     ) - aaz(1:nx, :   )) / delx
+
+      bbz(1:nx, :) = (aay(2:nx+1, :) - aay(1:nx, :)) / delx
+
+      CALL divb_diffusion
 
       CALL boundary_conditions(t)
 
@@ -117,5 +113,32 @@ CONTAINS
     END DO
 
   END SUBROUTINE relax_routine
+
+  SUBROUTINE divb_diffusion
+
+    REAL(num), DIMENSION(0:nx+1, 0:nz+1) :: divb
+
+    divb(1:nx, 1:nz) = &
+        (bbx(2:nx+1, 1:nz) - bbx(1:nx, 1:nz)) / delx &
+      + (bbz(1:nx, 2:nz+1) - bbz(1:nx, 1:nz)) / delz
+
+    ! Apply boundary conditions
+    ! divb(0, :) = divb(1, :)
+    ! divb(nx+1, :) = divb(nx, :)
+    ! divb(:, 0) = divb(:, 1)
+    ! divb(:, nz+1) = divb(:, nz)
+    ! divb(0, :) = 0.0_num
+    ! divb(nx+1, :) = 0.0_num
+    ! divb(:, 0) = 0.0_num
+    ! divb(:, nz+1) = 0.0_num
+    divb(0, :) = divb(nx, :)
+    divb(nx+1, :) = divb(1, :)
+    divb(:, 0) = divb(:, nz)
+    divb(:, nz+1) = divb(:, 1)
+
+    bbx = bbx + etad * dt * (divb(1:nx+1, :) - divb(0:nx, :)) / delx
+    bbz = bbz + etad * dt * (divb(:, 1:nz+1) - divb(:, 0:nz)) / delz
+
+  END SUBROUTINE divb_diffusion
 
 END MODULE cal
