@@ -166,7 +166,6 @@ CONTAINS
     ALLOCATE(aax(1:nx, 1:nz+1))
     ALLOCATE(aay(1:nx+1, 1:nz+1))
     ALLOCATE(aaz(1:nx+1, 1:nz))
-    ALLOCATE(diva(2:nx, 2:nz))
 
     ALLOCATE(bbx(1:nx+1, 0:nz+1))
     ALLOCATE(bby(0:nx+1, 0:nz+1))
@@ -207,7 +206,7 @@ CONTAINS
 
   SUBROUTINE arraydealoc
 
-    DEALLOCATE(aax, aay, aaz, diva)
+    DEALLOCATE(aax, aay, aaz)
     DEALLOCATE(bbx, bby, bbz)
     DEALLOCATE(ccx, ccy, ccz)
     DEALLOCATE(bx, by, bz)

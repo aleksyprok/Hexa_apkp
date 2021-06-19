@@ -14,13 +14,11 @@ PROGRAM relax
 
   basedt = timestep_s / time_s
   etad = 0.05_num * delx * delx / basedt
-  dt = 0.2 * delx * delx / etad
-  dt = 1.e-3_num
+  dt = 0.01 * delx * delx / etad
 
   CALL calc_initial_field
 
   CALL writedata(0)
-  CALL write_hexa(0)
   OPEN (UNIT = 50, FILE = 'run1/diagnostic', STATUS = 'unknown')
 
   CALL relax_routine

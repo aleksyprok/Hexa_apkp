@@ -71,17 +71,6 @@ CONTAINS
       eex(:, 1) = 0.0_num
       eey(:, 1) = 0.0_num
 
-      ! aax = aax - dt * eex
-      ! aay = aay - dt * eey
-      ! aaz = aaz - dt * eez
-      !
-      ! bbx(:, 1:nz) =-(aay(:, 2:nz+1) - aay(:, 1:nz)) / delz
-      !
-      ! bby(1:nx, 1:nz) = (aax(:     , 2:nz+1) - aax(:   , 1:nz)) / delz  &
-      !                 - (aaz(2:nx+1, :     ) - aaz(1:nx, :   )) / delx
-      !
-      ! bbz(1:nx, :) = (aay(2:nx+1, :) - aay(1:nx, :)) / delx
-
       bbx(:, 1:nz) = bbx(:, 1:nz) + dt * (eey(:, 2:nz+1) - eey(:, 1:nz)) / delz
       bby(1:nx, 1:nz) = bby(1:nx, 1:nz) + dt * ((eez(2:nx+1, :) - eez(1:nx, :)) / delx - &
                                                 (eex(:, 2:nz+1) - eex(:, 1:nz)) / delz )
@@ -100,7 +89,6 @@ CONTAINS
         t_snapshot = t_snapshot + dt_snapshots
         snapshot_num = snapshot_num + 1
         CALL writedata(snapshot_num)
-        CALL write_hexa(snapshot_num)
       END IF
       ! PRINT*, n, t
       ! CALL output_diag
@@ -110,10 +98,9 @@ CONTAINS
       ! PRINT*, dt
 
       ! Set timestep
-      ! dt = 0.1_num *  MINVAL( (/ delx / MAXVAL( (/ ABS(vx), TINY(0.0_num) /) ), &
-      !                            delz / MAXVAL( (/ ABS(vz), TINY(0.0_num) /) ), &
-      !                            delx * delz / etad /) )
-      dt = 1.e-3_num
+      dt = 0.01_num *  MINVAL( (/ delx / MAXVAL( (/ ABS(vx), TINY(0.0_num) /) ), &
+                                 delz / MAXVAL( (/ ABS(vz), TINY(0.0_num) /) ), &
+                                 delx * delz / etad /) )
 
     END DO
 
@@ -128,18 +115,10 @@ CONTAINS
       + (bbz(1:nx, 2:nz+1) - bbz(1:nx, 1:nz)) / delz
 
     ! Apply boundary conditions
-    ! divb(0, :) = divb(1, :)
-    ! divb(nx+1, :) = divb(nx, :)
-    ! divb(:, 0) = divb(:, 1)
-    ! divb(:, nz+1) = divb(:, nz)
-    ! divb(0, :) = 0.0_num
-    ! divb(nx+1, :) = 0.0_num
-    ! divb(:, 0) = 0.0_num
-    ! divb(:, nz+1) = 0.0_num
-    divb(0, :) = divb(nx, :)
-    divb(nx+1, :) = divb(1, :)
-    divb(:, 0) = divb(:, nz)
-    divb(:, nz+1) = divb(:, 1)
+    divb(0, :) = 0.0_num
+    divb(nx+1, :) = 0.0_num
+    divb(:, 0) = 0.0_num
+    divb(:, nz+1) = 0.0_num
 
     bbx = bbx + etad * dt * (divb(1:nx+1, :) - divb(0:nx, :)) / delx
     bbz = bbz + etad * dt * (divb(:, 1:nz+1) - divb(:, 0:nz)) / delz

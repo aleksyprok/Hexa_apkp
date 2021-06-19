@@ -18,7 +18,7 @@ MODULE var_global
   CHARACTER (LEN = *), PARAMETER :: output_hexa          = 'run1/run1_'
   CHARACTER (LEN = 50) :: filename
 
-  REAL(num), DIMENSION(:, :), ALLOCATABLE :: aax, aay, aaz, diva
+  REAL(num), DIMENSION(:, :), ALLOCATABLE :: aax, aay, aaz
   REAL(num), DIMENSION(:, :), ALLOCATABLE :: bbx, bby, bbz, bx, by, bz
   REAL(num), DIMENSION(:, :), ALLOCATABLE :: ccx, ccy, ccz, cx, cy, cz
   REAL(num), DIMENSION(:, :), ALLOCATABLE :: eex, eey, eez, ex, ey, ez
