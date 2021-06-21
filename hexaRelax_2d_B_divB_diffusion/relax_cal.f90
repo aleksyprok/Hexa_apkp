@@ -80,8 +80,10 @@ CONTAINS
 
       CALL boundary_conditions(t)
 
+      ! Reduced output
       IF (MOD(n, 100) .EQ. 0) PRINT*, n, t
       IF (t .GE. t_eneg_shot) THEN
+        iter_no = REAL(n, num)
         t_eneg_shot = t_eneg_shot + dt_eneg_shot
         CALL output_diag
       END IF
@@ -90,17 +92,17 @@ CONTAINS
         snapshot_num = snapshot_num + 1
         CALL writedata(snapshot_num)
       END IF
+
+      ! Full output
       ! PRINT*, n, t
       ! CALL output_diag
       ! snapshot_num = snapshot_num + 1
       ! CALL writedata(snapshot_num)
-      ! CALL write_hexa(snapshot_num)
-      ! PRINT*, dt
 
       ! Set timestep
       dt = 0.01_num *  MINVAL( (/ delx / MAXVAL( (/ ABS(vx), TINY(0.0_num) /) ), &
-                                 delz / MAXVAL( (/ ABS(vz), TINY(0.0_num) /) ), &
-                                 delx * delz / etad /) )
+                                  delz / MAXVAL( (/ ABS(vz), TINY(0.0_num) /) ), &
+                                  delx * delz / etad /) )
 
     END DO
 
@@ -115,10 +117,12 @@ CONTAINS
       + (bbz(1:nx, 2:nz+1) - bbz(1:nx, 1:nz)) / delz
 
     ! Apply boundary conditions
-    divb(0, :) = 0.0_num
-    divb(nx+1, :) = 0.0_num
-    divb(:, 0) = 0.0_num
-    divb(:, nz+1) = 0.0_num
+    ! Impose zero gradient to ensure divB diffusion does not change the magnetic
+    ! field at the boundaries.
+    divb(0, :) = divb(1, :)
+    divb(nx+1, :) = divb(nx, :)
+    divb(:, 0) = divb(:, 1)
+    divb(:, nz+1) = divb(:, nz)
 
     bbx = bbx + etad * dt * (divb(1:nx+1, :) - divb(0:nx, :)) / delx
     bbz = bbz + etad * dt * (divb(:, 1:nz+1) - divb(:, 0:nz)) / delz

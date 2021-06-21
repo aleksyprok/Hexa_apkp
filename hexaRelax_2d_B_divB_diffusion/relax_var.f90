@@ -28,7 +28,7 @@ MODULE var_global
   REAL(num), DIMENSION(:), ALLOCATABLE :: xc, xb, yc, yb, zc, zb
 
   !  Model parameters:
-  REAL(num) :: etad
+  REAL(num) :: etad, iter_no = 0.0_num
   REAL(num), PARAMETER :: kx = pi / 3.0_num, Lz = 6.0_num
   REAL(num) :: l = kx
 

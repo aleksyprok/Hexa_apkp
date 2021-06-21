@@ -133,13 +133,13 @@ CONTAINS
     ! alpha = 0.5_num * kx
     l = SQRT(kx * kx - alpha * alpha)
     DO ix = 1, nx + 1
-      bbx(ix, 0   ) = bx_nlff(xb(ix), 0.0_num, l)
-      bbx(ix, 1   ) = bx_nlff(xb(ix), delz, l)
+      bbx(ix, 0   ) = bx_nlff(xb(ix), -0.5_num * delz, l)
+      bbx(ix, 1   ) = bx_nlff(xb(ix),  0.5_num * delz, l)
       ! bbx(ix, nz+1) = bx_nlff(xb(ix), 6.0_num, l)
     END DO
     DO ix = 0, nx + 1
-      bby(ix, 0   ) = by_nlff(xc(ix), 0.0_num, l)
-      bby(ix, 1   ) = by_nlff(xc(ix), delz, l)
+      bby(ix, 0   ) = by_nlff(xc(ix), -0.5_num * delz, l)
+      bby(ix, 1   ) = by_nlff(xc(ix),  0.5_num * delz, l)
       ! bby(ix, nz+1) = by_nlff(xc(ix), 6.0_num, l)
     END DO
 

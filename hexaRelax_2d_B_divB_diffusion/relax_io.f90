@@ -35,8 +35,10 @@ CONTAINS
     REAL(num), DIMENSION(nx, nz) :: by_err
     REAL(num), DIMENSION(nx, nz+1) :: bz_err
     REAL(num), DIMENSION(nx, 2:nz) :: err_array
-    REAL(num), DIMENSION(nx, nz) :: divb
+    REAL(num), DIMENSION(nx, nz) :: divb, divb_norm, bbm_c
+    REAL(num), DIMENSION(nx) :: divb_base
     REAL(num) :: mag_eng, sz, q, err, min_divb, max_divb, mean_divb
+    REAL(num) :: max_divb_norm, mean_divb_norm, divb_flux, divb_diss
 
     ! Calculate magnetic energy
     b_c = 0.25_num * (bb(1:nx  , 2:nz  ) + bb(2:nx+1, 2:nz  ) + &
@@ -75,10 +77,27 @@ CONTAINS
     ! divb
     divb = (bbx(2:nx+1, 1:nz) - bbx(1:nx, 1:nz)) / delx &
          + (bbz(1:nx, 2:nz+1) - bbz(1:nx, 1:nz)) / delz
-    divb = ABS(divb)
-    min_divb = MINVAL(divb)
-    max_divb = MAXVAL(divb)
-    mean_divb = SUM(divb) / REAL(nx * nz, num)
+    min_divb = MINVAL(ABS(divb))
+    max_divb = MAXVAL(ABS(divb))
+    mean_divb = SUM(ABS(divb)) / REAL(nx * nz, num)
+
+    ! divb norm
+    bbm_c = 0.25_num * (bbm(1:nx  , 1:nz  ) + bbm(2:nx+1, 1:nz  ) + &
+                        bbm(1:nx  , 2:nz+1) + bbm(2:nx+1, 2:nz+1))
+    bbm_c = SQRT(bbm_c)
+    divb_norm = divb * delx / (bbm_c * 6.0_num)
+    max_divb_norm = MAXVAL(ABS(divb_norm))
+    mean_divb_norm = SUM(ABS(divb_norm)) / REAL(nx * nz, num)
+
+    ! divb flux
+    divb_base = 0.5_num * (divb(:, 1) + divb(:, 2))
+    divb_flux = etad * SUM(divb_base * bbz(:, 2)) * delx
+
+    ! divB dissipation
+    divb_diss = etad * SUM(divB(:, 2:nz) * divB(:, 2:nz)) * delx * delz
+
+    ! Current-field angle
+    
 
     WRITE(50, *) t, &
                  dt, &
@@ -88,7 +107,12 @@ CONTAINS
                  err, &
                  min_divb, &
                  max_divb, &
-                 mean_divb
+                 mean_divb, &
+                 max_divb_norm, &
+                 mean_divb_norm, &
+                 divb_flux, &
+                 divb_diss, &
+                 iter_no
 
   END SUBROUTINE output_diag
 
