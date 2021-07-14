@@ -136,8 +136,7 @@ CONTAINS
     ! Boundary conditions
 
     ! Do z = z_min BCs first
-    ! alpha = 0.5_num * kx * ramp_up(0.1_num * t)
-    alpha = 0.5_num * kx
+    alpha = 0.5_num * kx * ramp_up(0.1_num * t)
     l = SQRT(kx * kx - alpha * alpha)
     aax0 = 0.0_num
     DO ix = 1, nx + 1
@@ -149,12 +148,6 @@ CONTAINS
     bbx(:   , 0) =-(aay1 - aay0) / delz
     bby(1:nx, 0) = (aax1 - aax0) / delz  &
                  - (aaz0(2:nx+1) - aaz0(1:nx)) / delx
-    ! DO ix = 1, nx + 1
-    !  bbx(ix, 0) = bx_nlff(xb(ix), 0.5_num * delz, l)
-    ! END DO
-    ! DO ix = 0, nx + 1
-    !  bby(ix, 0) = by_nlff(xc(ix), 0.5_num * delz, l)
-    ! END DO
 
     bby(0, :) = bby(nx, :)
     bbz(0, :) = bbz(nx, :)

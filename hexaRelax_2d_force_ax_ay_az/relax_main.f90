@@ -19,8 +19,8 @@ PROGRAM relax
   CALL calc_initial_field
 
   CALL writedata(0)
-  CALL write_hexa(0)
-  CALL write_aa0(0)
+  ! CALL write_hexa(0)
+  ! CALL write_aa0(0)
   OPEN (UNIT = 50, FILE = 'run1/diagnostic', STATUS = 'unknown')
 
   CALL relax_routine

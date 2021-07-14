@@ -86,9 +86,11 @@ CONTAINS
     REAL(num), DIMENSION(nx, nz) :: divb, divb_norm, bbm_c
     REAL(num), DIMENSION(nx) :: divb_base
     REAL(num), DIMENSION(nx+1, nz+1) :: fx, fy, fz, cc, ccm, sin_theta
+    REAL(num), DIMENSION(nx) :: divb_base_ghost, bbz0
     REAL(num) :: mag_eng, sz, q, err, min_divb, max_divb, mean_divb
     REAL(num) :: max_divb_norm, mean_divb_norm, divb_flux, divb_diss
     REAL(num) :: ccmax, min_sin_theta, max_sin_theta, mean_sin_theta, sigma_j
+    REAL(num) :: max_divb_ghost
 
     ! Calculate magnetic energy
     b_c = 0.25_num * (bb(1:nx  , 2:nz  ) + bb(2:nx+1, 2:nz  ) + &
@@ -164,6 +166,15 @@ CONTAINS
     mean_sin_theta = SUM(sin_theta) / REAL(nx * nz, num)
     sigma_j = SUM(sin_theta * SQRT(ccm)) / SUM(SQRT(ccm))
 
+    ! divB in ghost cells below z = z_min boundary
+    ! DO ix = 1, nx
+    !   bbz0(ix) = bz_nlff(xc(ix), 0.0_num, kx)
+    ! END DO
+    bbz0 = (aay0(2:nx+1) - aay0(1:nx)) / delx
+    divb_base_ghost = (bbx(2:nx+1, 0) - bbx(1:nx, 0)) / delx &
+                    + (bbz(1:nx, 1) - bbz0) / delz
+    max_divb_ghost = MAXVAL(ABS(divb_base_ghost))
+
     WRITE(50, *) t, &
                  dt, &
                  mag_eng, &
@@ -181,7 +192,8 @@ CONTAINS
                  min_sin_theta, &
                  max_sin_theta, &
                  mean_sin_theta, &
-                 sigma_j
+                 sigma_j, &
+                 max_divb_ghost
 
   END SUBROUTINE output_diag
 

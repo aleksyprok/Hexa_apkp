@@ -21,6 +21,7 @@ min_sin_theta = np.array([])
 max_sin_theta = np.array([])
 mean_sin_theta = np.array([])
 sigma_j = np.array([])
+max_divb_ghost = np.array([])
 file = open('run1/diagnostic', 'r')
 n = 0
 while True:
@@ -48,6 +49,7 @@ while True:
     max_sin_theta  = np.append(max_sin_theta,  line[15])
     mean_sin_theta  = np.append(mean_sin_theta,  line[16])
     sigma_j  = np.append(sigma_j,  line[17])
+    max_divb_ghost  = np.append(max_divb_ghost,  line[18])
 
 print("len(t) =", len(t))
 

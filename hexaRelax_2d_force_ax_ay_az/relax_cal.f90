@@ -86,7 +86,7 @@ CONTAINS
       CALL boundary_conditions(t)
 
       ! Reduced output
-      IF (MOD(n, 100) .EQ. 0) PRINT*, n, t
+      IF (MOD(n, 100) .EQ. 0) PRINT*, n, t, dt, 0.01_num * delx * delz / etad
       IF (t .GE. t_eneg_shot) THEN
         iter_no = REAL(n, num)
         t_eneg_shot = t_eneg_shot + dt_eneg_shot
@@ -96,8 +96,8 @@ CONTAINS
         t_snapshot = t_snapshot + dt_snapshots
         snapshot_num = snapshot_num + 1
         CALL writedata(snapshot_num)
-        CALL write_hexa(snapshot_num)
-        CALL write_aa0(snapshot_num)
+        ! CALL write_hexa(snapshot_num)
+        ! CALL write_aa0(snapshot_num)
       END IF
 
       ! Full output
