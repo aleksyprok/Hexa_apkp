@@ -23,12 +23,12 @@ start_time = time.time()
 file_number = len(glob.glob('run1/relax_*'))
 print(file_number)
 
-output_dir = 'Figures/Video/along_z'
+output_dir = 'Figures/Video/along_x'
 
 nx = 512
 nz = 512
 dx = np.float64(6 / nx)
-dz = np.float64(6 / nz)
+dz = np.float64(6 / (nz + 1))
 kx = np.pi / 3
 Lz = 6
 
@@ -37,18 +37,36 @@ xb = np.linspace(0, 6, nx + 1)
 zc = np.linspace(dz / 2, 6 + dz / 2, nz + 2)
 zb = np.linspace(dz, 6, nz + 1)
 
+alpha = 0.5 * kx
+l = np.sqrt(kx * kx - alpha * alpha)
+
+X, Z = np.meshgrid(xb, zc)
+bx_ana = bx_ana_fun(X, Z, l)
+
+X, Z = np.meshgrid(xc, zc)
+by_ana = by_ana_fun(X, Z, l)
+
+X, Z = np.meshgrid(xc, zb)
+bz_ana = bz_ana_fun(X, Z, l)
+
+b_ana = {"bbx" : bx_ana, \
+         "bby" : by_ana, \
+         "bbz" : bz_ana}
+
 fig = plt.figure()
 fig_size = fig.get_size_inches()
 fig_size[0] = fig_size[0] * 3
 fig_size[1] = fig_size[1] * 3
 fig.set_size_inches(fig_size)
 
-ix_list = [0, 1, nx//4, nx//2, -nx//4, -2,-1]
+# iz_list = [0, 1, 2, 3, 4, 5, 6]
+iz_list = [0, 1, 2, 3, nz//4, nz//2, -nz//4, -2, -1]
 var_list = ["bbx", "bby", "bbz", "divb"]
+# var_list = ["bbx", "bby", "bbz"]
 for var in var_list:
     os.makedirs(output_dir + '/' + var, exist_ok = True)
 
-for n in range(0, file_number, 1):
+for n in range(0, file_number, 100):
 
     filename = 'run1/relax_' + '{:05d}'.format(n)
     file = FortranFile(filename, 'r')
@@ -67,34 +85,16 @@ for n in range(0, file_number, 1):
           "bbz" : bbz, \
           "divb" : divb}
 
-    alpha = 0.5 * kx * ramp_up(0.1 * t)
-    l = np.sqrt(kx * kx - alpha * alpha)
-
-    X, Z = np.meshgrid(xb, zc)
-    bx_ana = bx_ana_fun(X, Z, l)
-
-    X, Z = np.meshgrid(xc, zc)
-    by_ana = by_ana_fun(X, Z, l)
-
-    X, Z = np.meshgrid(xc, zb)
-    bz_ana = bz_ana_fun(X, Z, l)
-
-    b_ana = {"bbx" : bx_ana, \
-             "bby" : by_ana, \
-             "bbz" : bz_ana}
-
     for var in var_list:
         k = 0
-        for i in range(7):
-            ix = ix_list[i]
+        for i in range(9):
+            iz = iz_list[i]
             k += 1
-            if i == 3: k += 1
-            if i == 4: k += 1
             ax = fig.add_subplot(3, 3, k)
-            ax.plot(bb[var][:, ix])
+            ax.plot(bb[var][iz, :])
             if var != "divb":
-                ax.plot(b_ana[var][:, ix])
-            ax.set_title(var + ', ix = ' + str(ix))
+                ax.plot(b_ana[var][iz, :])
+            ax.set_title(var + ', iz = ' + str(iz))
             if i == 1:
                 ax.text(0.35, 1.1, \
                     	"t = " + "{:10.2e}".format(t), \

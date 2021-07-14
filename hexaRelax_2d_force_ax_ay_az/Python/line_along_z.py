@@ -28,7 +28,7 @@ output_dir = 'Figures/Video/along_z'
 nx = 512
 nz = 512
 dx = np.float64(6 / nx)
-dz = np.float64(6 / nz)
+dz = np.float64(6 / (nz + 1))
 kx = np.pi / 3
 Lz = 6
 
@@ -92,8 +92,10 @@ for n in range(0, file_number, 1):
             if i == 4: k += 1
             ax = fig.add_subplot(3, 3, k)
             ax.plot(bb[var][:, ix])
+            # ax.plot(bb[var][:5, ix])
             if var != "divb":
                 ax.plot(b_ana[var][:, ix])
+                # ax.plot(b_ana[var][:5, ix])
             ax.set_title(var + ', ix = ' + str(ix))
             if i == 1:
                 ax.text(0.35, 1.1, \
