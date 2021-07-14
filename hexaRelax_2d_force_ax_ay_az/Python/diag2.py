@@ -108,4 +108,4 @@ ax.set_xscale('log')
 ax.set_yscale('log')
 ax.set_xlabel('Iteration number')
 
-plt.show()
+fig.savefig('Figures/error_plots.pdf', bbox_inches = "tight")
