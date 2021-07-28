@@ -48,7 +48,7 @@ var_list = ["bbx", "bby", "bbz", "divb"]
 for var in var_list:
     os.makedirs(output_dir + '/' + var, exist_ok = True)
 
-for n in range(0, file_number, 1):
+for n in range(0, file_number, 100):
 
     filename = 'run1/relax_' + '{:05d}'.format(n)
     file = FortranFile(filename, 'r')
