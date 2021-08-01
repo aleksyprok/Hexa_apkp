@@ -4,7 +4,7 @@ FFILES1 = relax_var.o relax_grid.o relax_io.o relax_cal.o relax_main.o
 # FFLAGS1 = -O0 -g -Wall -Wextra -pedantic -fbounds-check \
 #           -ffpe-trap=invalid,zero,overflow -Wno-unused-parameter \
 # 			    -Wrealloc-lhs-all -fno-realloc-lhs
-FFLAGS1 = -O3
+FFLAGS1 = -O3 -fallow-argument-mismatch
 
 relax:$(FFILES1)
 	$(F90) $(FFLAGS1) $(FFILES1) -o relax
