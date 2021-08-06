@@ -92,13 +92,6 @@ CONTAINS
       eey = 0.5 * (ey(:, 1:ny, :) + ey(:, 2:ny+1, :))
       eez = 0.5 * (ez(:, :, 1:nz) + ez(:, :, 2:nz+1))
 
-      ! Overwrite electric Field
-      eex(:, :, 1) = 0.0_num
-      eey(:, :, 1) = 0.0_num
-      ! IF (t .GE. 10.0_num) THEN
-      !   eex(:, :, 1) = 0.0_num
-      !   eey(:, :, 1) = 0.0_num
-      ! END IF
 
       bbx(:, 1:ny, 1:nz) = bbx(:, 1:ny, 1:nz) + dt * ( &
                            (eey(:, :, 2:nz+1) - eey(:, :, 1:nz)) / delz - &
@@ -264,40 +257,59 @@ CONTAINS
     REAL(num), INTENT(IN) :: t
 
     IF (left .EQ. MPI_PROC_NULL) THEN
-      bby(0, :, :) = bby_ff(0, :, :)
-      bbz(0, :, :) = bbz_ff(0, :, :)
+      bby(0, :, :) = bby_ff(0, :, :) * ramp_up(t) &
+                   + bby_po(0, :, :) * (1.0_num - ramp_up(t))
+      bbz(0, :, :) = bbz_ff(0, :, :) * ramp_up(t) &
+                   + bbz_po(0, :, :) * (1.0_num - ramp_up(t))
     END IF
 
     IF (right .EQ. MPI_PROC_NULL) THEN
-      bby(nx+1, :, :) = bby_ff(nx+1, :, :)
-      bbz(nx+1, :, :) = bbz_ff(nx+1, :, :)
+      bby(nx+1, :, :) = bby_ff(nx+1, :, :) * ramp_up(t) &
+                      + bby_po(nx+1, :, :) * (1.0_num - ramp_up(t))
+      bbz(nx+1, :, :) = bbz_ff(nx+1, :, :) * ramp_up(t) &
+                      + bbz_po(nx+1, :, :) * (1.0_num - ramp_up(t))
     END IF
 
     IF (down .EQ. MPI_PROC_NULL) THEN
-      bbx(:, 0, :) = bbx_ff(:, 0, :)
-      bbz(:, 0, :) = bbz_ff(:, 0, :)
+      bbx(:, 0, :) = bbx_ff(:, 0, :) * ramp_up(t) &
+                   + bbx_po(:, 0, :) * (1.0_num - ramp_up(t))
+      bbz(:, 0, :) = bbz_ff(:, 0, :) * ramp_up(t) &
+                   + bbz_po(:, 0, :) * (1.0_num - ramp_up(t))
     END IF
 
     IF (up .EQ. MPI_PROC_NULL) THEN
-      bbx(:, ny+1, :) = bbx_ff(:, ny+1, :)
-      bbz(:, ny+1, :) = bbz_ff(:, ny+1, :)
+      bbx(:, ny+1, :) = bbx_ff(:, ny+1, :) * ramp_up(t) &
+                      + bbx_po(:, ny+1, :) * (1.0_num - ramp_up(t))
+      bbz(:, ny+1, :) = bbz_ff(:, ny+1, :) * ramp_up(t) &
+                      + bbz_po(:, ny+1, :) * (1.0_num - ramp_up(t))
     END IF
 
-    bbx(:, :, 0) = bbx_ff(:, :, 0)
-    bby(:, :, 0) = bby_ff(:, :, 0)
+    bbx(:, :, 0) = bbx_ff(:, :, 0) * ramp_up(t) &
+                 + bbx_po(:, :, 0) * (1.0_num - ramp_up(t))
+    bbx(:, :, 1) = bbx_ff(:, :, 1) * ramp_up(t) &
+                 + bbx_po(:, :, 1) * (1.0_num - ramp_up(t))
+    bby(:, :, 0) = bby_ff(:, :, 0) * ramp_up(t) &
+                 + bby_po(:, :, 0) * (1.0_num - ramp_up(t))
+    bby(:, :, 1) = bby_ff(:, :, 1) * ramp_up(t) &
+                 + bby_po(:, :, 1) * (1.0_num - ramp_up(t))
+    bbz(:, :, 1) = bbz_ff(:, :, 1) * ramp_up(t) &
+                 + bbz_po(:, :, 1) * (1.0_num - ramp_up(t))
 
-    bbx(:, :, nz+1) = bbx_ff(:, :, nz+1)
-    bby(:, :, nz+1) = bby_ff(:, :, nz+1)
+    bbx(:, :, nz+1) = bbx_ff(:, :, nz+1) * ramp_up(t) &
+                    + bbx_po(:, :, nz+1) * (1.0_num - ramp_up(t))
+    bby(:, :, nz+1) = bby_ff(:, :, nz+1) * ramp_up(t) &
+                    + bby_po(:, :, nz+1) * (1.0_num - ramp_up(t))
 
   END SUBROUTINE boundary_conditions
 
   FUNCTION ramp_up(t)
 
     REAL(num), INTENT(IN) :: t
-    REAL(num) :: ramp_up
+    REAL(num) :: ramp_up, t_dummy
 
-    IF (t .LE. 1.0_num) THEN
-      ramp_up = SIN(0.5_num * pi * t) ** 2
+    t_dummy = t / 10.0_num ! ramp up phase last for 10 time units
+    IF (t_dummy .LE. 1.0_num) THEN
+      ramp_up = SIN(0.5_num * pi * t_dummy) ** 2
     ELSE
       ramp_up = 1.0_num
     END IF

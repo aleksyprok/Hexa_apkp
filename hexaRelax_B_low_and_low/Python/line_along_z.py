@@ -7,7 +7,7 @@ import glob
 
 start_time = time.time()
 
-file_number = len(glob.glob('run1/relax_*'))
+file_number = len(glob.glob('run1/run1_*'))
 print(file_number)
 
 output_dir = 'Figures/Video/along_z'
@@ -31,11 +31,11 @@ var_list = ["bbx", "bby", "bbz", "divb"]
 for var in var_list:
     os.makedirs(output_dir + '/' + var, exist_ok = True)
 
-for n in range(0, file_number, 10):
+for n in range(0, file_number, 100):
 
     print(n)
 
-    filename = 'run1/relax_' + '{:05d}'.format(n)
+    filename = 'run1/run1_' + '{:05d}'.format(n)
     file = FortranFile(filename, 'r')
     bbx = file.read_reals('float64').reshape((nz + 2, ny + 2, nx + 1), order = "C")
     bby = file.read_reals('float64').reshape((nz + 2, ny + 1, nx + 2), order = "C")

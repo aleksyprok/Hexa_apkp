@@ -19,7 +19,7 @@ MODULE var_global
   INTEGER :: periodic, open
 
   ! File and directory names
-  CHARACTER (LEN = *), PARAMETER :: potential_field_file = 'setup_files/low_and_low_nlff.dat'
+  CHARACTER (LEN = *), PARAMETER :: potential_field_file = 'setup_files/low_and_low_pot.dat'
   CHARACTER (LEN = *), PARAMETER :: evolution_field_file = 'setup_files/low_and_low_nlff.dat'
   CHARACTER (LEN = *), PARAMETER :: parameters_file      = 'setup_files/param1'       ! Used to get nx, ny, nz
   CHARACTER (LEN = *), PARAMETER :: setup_file           = 'setup_files/run1_setup'   ! Used to check for periodic/open boundaries
